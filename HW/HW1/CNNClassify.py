@@ -150,7 +150,7 @@ def get_transforms() -> Tuple[T.Compose, T.Compose]:
     return train_tf, test_tf
 
 
-def make_loaders(batch_size: int = 128, num_workers: int = 2) -> Tuple[DataLoader, DataLoader]:
+def make_loaders(batch_size: int = 128, num_workers: int = 1) -> Tuple[DataLoader, DataLoader]:
     train_tf, test_tf = get_transforms()
 
     train_set = torchvision.datasets.CIFAR10(
@@ -168,6 +168,19 @@ def make_loaders(batch_size: int = 128, num_workers: int = 2) -> Tuple[DataLoade
         test_set, batch_size=256, shuffle=False,
         num_workers=num_workers, pin_memory=True
     )
+    ds =  torchvision.datasets.CIFAR10(
+        root="./data", train=False, download=True
+        )
+
+    target_class = "automobile"
+    target_idx = ds.classes.index(target_class)
+
+    for i in range(len(ds)):
+        img, label = ds[i]
+        if label == target_idx:
+            img.save("automobile.png")
+            print("Saved automobile.png")
+            break
     return train_loader, test_loader
 
 
@@ -208,11 +221,11 @@ def train():
     epochs = 35  # typically enough for >=75% with this net + aug
     os.makedirs(MODEL_DIR, exist_ok=True)
 
-    # Main loop
+    best_acc = 0.0
+
     for epoch in range(1, epochs + 1):
         model.train()
         running_loss = 0.0
-        start = time.time()
 
         for x, y in train_loader:
             x = x.to(device, non_blocking=True)
@@ -228,23 +241,18 @@ def train():
 
         scheduler.step()
 
-        # REQUIRED: show testing accuracy each iteration (epoch)
         test_acc = evaluate_accuracy(model, test_loader, device)
-
-        # Print only essential results (loss + accuracy is typically acceptable,
-        # but if your instructor is strict, you may remove loss printing.)
-        avg_loss = running_loss / len(train_loader.dataset)
-        elapsed = time.time() - start
         print(f"Epoch {epoch:02d}/{epochs}  Test Accuracy: {test_acc:.2f}%")
 
-    # Save model
-    torch.save(
-        {
-            "model_state": model.state_dict(),
-            "class_names": CIFAR10_CLASSES,
-        },
-        MODEL_PATH
-    )
+        if test_acc > best_acc:
+            best_acc = test_acc
+            torch.save(
+                {
+                    "model_state": model.state_dict(),
+                    "class_names": CIFAR10_CLASSES,
+                },
+                MODEL_PATH
+            )
 
 
 # -----------------------------
@@ -264,7 +272,18 @@ def _load_image_as_cifar_tensor(img_path: str) -> torch.Tensor:
         raise ValueError("Failed to read image (OpenCV returned None).")
 
     rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-    rgb = cv2.resize(rgb, (32, 32), interpolation=cv2.INTER_AREA)
+    h, w = rgb.shape[:2]
+    scale = 40.0 / min(h, w)
+    new_w = int(round(w * scale))
+    new_h = int(round(h * scale))
+    rgb = cv2.resize(rgb, (new_w, new_h), interpolation=cv2.INTER_AREA)
+
+    start_x = max(0, (new_w - 32) // 2)
+    start_y = max(0, (new_h - 32) // 2)
+    rgb = rgb[start_y:start_y+32, start_x:start_x+32]
+
+    if rgb.shape[0] != 32 or rgb.shape[1] != 32:
+        rgb = cv2.resize(rgb, (32, 32), interpolation=cv2.INTER_AREA)
 
     rgb = rgb.astype(np.float32) / 255.0  # [0,1]
     # HWC -> CHW
@@ -313,7 +332,18 @@ def _visualize_first_conv(model: CIFAR10CNN, x: torch.Tensor, out_path: str = "C
 
     cv2.imwrite(out_path, grid)
 
+@torch.no_grad()
+def sanity_check_on_cifar(model, device):
+    _, test_loader = make_loaders(batch_size=1, num_workers=2)
+    model.eval()
 
+    x, y = next(iter(test_loader))
+    x = x.to(device)
+    logits = model(x)
+    pred = torch.argmax(logits, dim=1).item()
+
+    print(f"Sanity Check - True: {CIFAR10_CLASSES[y.item()]}, Pred: {CIFAR10_CLASSES[pred]}")
+    
 def test(img_path: str):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
