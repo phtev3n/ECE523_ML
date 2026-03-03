@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """
+#############################
+Brian A. Morgan
+Student ID: 23882090
+#############################
 ECE 523 HW1 - CNN classifier for CIFAR-10
 Commands:
   python CNNclassify.py train
   python CNNclassify.py test xxx.png
+
+  e.g.: python CNNclassify.py test frog.png
 
 Requirements satisfied:
 - First conv layer: 32 filters, 5x5 kernel, stride 1
@@ -11,22 +17,22 @@ Requirements satisfied:
 - Print testing accuracy each epoch during training
 - Test command loads model, predicts xxx.png, and saves first conv visualizations to CONV_rslt.png
 - Minimal prints (only required results)
+
+System Software requirements:
+- Python 3.8+
+- PyTorch 1.7+  (with CUDA if available)
 """
 
 import os
 import sys
 import time
 from typing import Tuple, List
-
 import numpy as np
 from PIL import Image
-
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-
 import torchvision
 import torchvision.transforms as T
 
@@ -57,7 +63,8 @@ class CIFAR10CNN(nn.Module):
     def __init__(self, num_classes: int = 10):
         super().__init__()
 
-        # REQUIRED FIRST CONV LAYER (DO NOT CHANGE)
+        # REQUIRED FIRST CONV LAYER
+        # Filter size is 5*5, stride is 1, and padding is 2 to keep spatial size at 32x32.
         self.conv1 = nn.Conv2d(
             in_channels=3,
             out_channels=32,
@@ -67,11 +74,18 @@ class CIFAR10CNN(nn.Module):
             bias=False
         )
 
-        # Follow-on layers (allowed to change)
+        # Follow-on layers
         self.bn1 = nn.BatchNorm2d(32)
         self.relu = nn.ReLU(inplace=True)
 
         # More conv blocks
+        # Each block has 2 conv layers followed by max pooling and dropout.
+        # This architecture is designed to be reasonably efficient while achieving good accuracy.
+        # The number of filters doubles after each block, while spatial size halves due to pooling.
+        # Dropout rates increase in deeper layers to help regularization.
+        # The final feature map size before the classifier is 256 channels with 4x4 spatial dimensions.
+        # This allows a fully connected layer with 512 hidden units before the final output layer.
+        
         self.block2 = nn.Sequential(
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1, bias=False),
             nn.BatchNorm2d(64),
@@ -80,7 +94,7 @@ class CIFAR10CNN(nn.Module):
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),          # 32 -> 16
-            nn.Dropout(0.20),
+            nn.Dropout(0.20),         # Moderate dropout to prevent overfitting as we increase model capacity
         )
 
         self.block3 = nn.Sequential(
@@ -91,7 +105,7 @@ class CIFAR10CNN(nn.Module):
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),          # 16 -> 8
-            nn.Dropout(0.25),
+            nn.Dropout(0.25),         # Slightly higher dropout as we go deeper and have more parameters
         )
 
         self.block4 = nn.Sequential(
@@ -99,17 +113,17 @@ class CIFAR10CNN(nn.Module):
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),          # 8 -> 4
-            nn.Dropout(0.30),
+            nn.Dropout(0.30),         # Higher dropout in deepest block to combat overfitting with more parameters and smaller spatial size
         )
 
         # Classifier
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(256 * 4 * 4, 512, bias=False),
+            nn.Linear(256 * 4 * 4, 512, bias=False),    # Fully connected layer to reduce from 4096 features to 512 hidden units
             nn.BatchNorm1d(512),
             nn.ReLU(inplace=True),
-            nn.Dropout(0.40),
-            nn.Linear(512, num_classes),
+            nn.Dropout(0.40),         # Higher dropout before final layer to improve generalization
+            nn.Linear(512, num_classes),    # Final output layer with num_classes outputs (10 for CIFAR-10)
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -133,9 +147,13 @@ def get_transforms() -> Tuple[T.Compose, T.Compose]:
     Training uses standard CIFAR-10 augmentation for accuracy.
     Testing uses only normalization.
     """
-    mean = (0.4914, 0.4822, 0.4465)
-    std = (0.2470, 0.2435, 0.2616)
+    mean = (0.4914, 0.4822, 0.4465) #standard CIFAR-10 mean for normalization
+    std = (0.2470, 0.2435, 0.2616) #standard CIFAR-10 std for normalization
 
+    # Augmentation for training: random crop with padding and horizontal flip
+    # ToTensor() converts PIL image to [0,1] range and moves channels to first dim.
+    # Normalization uses the same mean/std as testing to ensure consistency.
+    # Note: Augmentation is only applied to training data, not testing.
     train_tf = T.Compose([
         T.RandomCrop(32, padding=4),
         T.RandomHorizontalFlip(),
@@ -242,6 +260,8 @@ def train():
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
 
     # Training settings
+    # Tunable epochs: 35 is a good balance of training time and accuracy for this architecture.
+    # More epochs can improve accuracy slightly but with diminishing returns.
     epochs = 35
     os.makedirs(MODEL_DIR, exist_ok=True)
 
@@ -284,7 +304,7 @@ def train():
         # Test stats
         test_loss, test_acc = evaluate_metrics(model, test_loader, device, criterion)
 
-        # Print required statistics
+        # Print statistics
         print(
             f"{epoch:02d}    "
             f"{train_loss:.4f}      "
