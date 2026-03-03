@@ -19,7 +19,8 @@ import time
 from typing import Tuple, List
 
 import numpy as np
-import cv2
+from PIL import Image
+
 
 import torch
 import torch.nn as nn
@@ -172,15 +173,6 @@ def make_loaders(batch_size: int = 128, num_workers: int = 1) -> Tuple[DataLoade
         root="./data", train=False, download=True
         )
 
-    target_class = "automobile"
-    target_idx = ds.classes.index(target_class)
-
-    for i in range(len(ds)):
-        img, label = ds[i]
-        if label == target_idx:
-            img.save("automobile.png")
-            print("Saved automobile.png")
-            break
     return train_loader, test_loader
 
 
@@ -317,39 +309,20 @@ def train():
 # -----------------------------
 def _load_image_as_cifar_tensor(img_path: str) -> torch.Tensor:
     """
-    Reads an image with OpenCV, converts to RGB, resizes to 32x32,
-    and applies CIFAR-10 normalization.
+    Loads an image and applies the SAME preprocessing as CIFAR-10 test data.
     Output: tensor shape [1, 3, 32, 32]
     """
     if not os.path.isfile(img_path):
         raise FileNotFoundError(f"Image not found: {img_path}")
 
-    bgr = cv2.imread(img_path, cv2.IMREAD_COLOR)
-    if bgr is None:
-        raise ValueError("Failed to read image (OpenCV returned None).")
+    img = Image.open(img_path).convert("RGB")
 
-    rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-    h, w = rgb.shape[:2]
-    scale = 40.0 / min(h, w)
-    new_w = int(round(w * scale))
-    new_h = int(round(h * scale))
-    rgb = cv2.resize(rgb, (new_w, new_h), interpolation=cv2.INTER_AREA)
+    # CIFAR images are 32x32; if external image, resize to 32x32.
+    if img.size != (32, 32):
+        img = img.resize((32, 32), Image.BILINEAR)
 
-    start_x = max(0, (new_w - 32) // 2)
-    start_y = max(0, (new_h - 32) // 2)
-    rgb = rgb[start_y:start_y+32, start_x:start_x+32]
-
-    if rgb.shape[0] != 32 or rgb.shape[1] != 32:
-        rgb = cv2.resize(rgb, (32, 32), interpolation=cv2.INTER_AREA)
-
-    rgb = rgb.astype(np.float32) / 255.0  # [0,1]
-    # HWC -> CHW
-    chw = np.transpose(rgb, (2, 0, 1))
-    x = torch.from_numpy(chw).unsqueeze(0)  # [1,3,32,32]
-
-    mean = torch.tensor([0.4914, 0.4822, 0.4465]).view(1, 3, 1, 1)
-    std = torch.tensor([0.2470, 0.2435, 0.2616]).view(1, 3, 1, 1)
-    x = (x - mean) / std
+    _, test_tf = get_transforms()
+    x = test_tf(img).unsqueeze(0)  # [1,3,32,32]
     return x
 
 
@@ -357,7 +330,7 @@ def _load_image_as_cifar_tensor(img_path: str) -> torch.Tensor:
 def _visualize_first_conv(model: CIFAR10CNN, x: torch.Tensor, out_path: str = "CONV_rslt.png") -> None:
     """
     Produces a 32-tile visualization of conv1 feature maps for a single input image.
-    Saves as out_path.
+    Saves as out_path. Uses PIL for visualization.
     """
     model.eval()
 
@@ -365,29 +338,39 @@ def _visualize_first_conv(model: CIFAR10CNN, x: torch.Tensor, out_path: str = "C
     feats = model.conv1(x)  # [1, 32, 32, 32]
     feats = feats.squeeze(0).cpu().numpy()  # [32, 32, 32]
 
-    # Normalize each feature map for display
+    # Normalize each feature map for display and convert to RGB using a simple colormap
+    def gray_to_rgb_colormap(arr):
+        # Simple jet-like colormap using PIL (not as fancy as cv2, but sufficient)
+        arr = (arr * 255).astype(np.uint8)
+        img = Image.fromarray(arr, mode="L").convert("RGB")
+        # Apply a basic color mapping: map grayscale to RGB (blue to red)
+        # We'll use the R channel for high values, B for low, G for mid
+        r, g, b = img.split()
+        r = arr.copy()
+        g = (255 - np.abs(arr - 128)).astype(np.uint8)
+        b = 255 - arr
+        return Image.merge("RGB", (Image.fromarray(r), Image.fromarray(g), Image.fromarray(b)))
+
     tiles = []
     for k in range(feats.shape[0]):
         fm = feats[k]
         fm = fm - fm.min()
         denom = (fm.max() + 1e-8)
         fm = fm / denom
-        fm = (fm * 255.0).astype(np.uint8)
-        fm = cv2.applyColorMap(fm, cv2.COLORMAP_JET)
-        tiles.append(fm)
+        tile = gray_to_rgb_colormap(fm)
+        tiles.append(tile)
 
-    # Create an 8x4 grid (32 = 8 rows x 4 cols) or (4x8) - choose 8x4 for readability
+    # Create an 8x4 grid (32 = 8 rows x 4 cols)
     rows, cols = 8, 4
-    h, w, _ = tiles[0].shape
-    grid = np.zeros((rows * h, cols * w, 3), dtype=np.uint8)
-
+    h, w = tiles[0].size
+    grid_img = Image.new("RGB", (cols * h, rows * w))
     idx = 0
     for r in range(rows):
         for c in range(cols):
-            grid[r*h:(r+1)*h, c*w:(c+1)*w] = tiles[idx]
+            grid_img.paste(tiles[idx], (c * h, r * w))
             idx += 1
 
-    cv2.imwrite(out_path, grid)
+    grid_img.save(out_path)
 
 @torch.no_grad()
 def sanity_check_on_cifar(model, device):
