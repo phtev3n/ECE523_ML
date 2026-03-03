@@ -17,4 +17,4 @@
 # --------------------
 python --version
 pwd
-python CNNClassify.py test automobile.png
+python CNNClassify.py test frog.png

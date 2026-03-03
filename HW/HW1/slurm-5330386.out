@@ -1,0 +1,40 @@
+Python 3.11.4
+/home/u21/brianmorgan/repos/ECE523_ML/HW/HW1
+/home/u21/brianmorgan/pyenv/lib/python3.11/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 2 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+Loop  Train Loss  Train Acc%  Test Loss  Test Acc%
+01    1.3856       49.36      1.0072      63.77
+02    0.9563       66.05      0.7578      73.05
+03    0.8082       71.51      0.7124      74.76
+04    0.7246       74.55      0.6500      77.24
+05    0.6638       76.83      0.6492      78.49
+06    0.6158       78.48      0.5755      80.20
+07    0.5771       79.81      0.4917      82.79
+08    0.5481       80.88      0.5081      82.06
+09    0.5182       81.94      0.4608      83.96
+10    0.4945       82.99      0.4885      83.17
+11    0.4633       83.99      0.4366      85.32
+12    0.4492       84.30      0.4306      85.18
+13    0.4280       85.21      0.3922      86.37
+14    0.4099       85.74      0.4004      86.64
+15    0.3950       86.36      0.3666      87.44
+16    0.3826       86.77      0.3581      87.85
+17    0.3685       87.16      0.3702      87.33
+18    0.3513       87.85      0.3748      87.46
+19    0.3407       88.07      0.3442      88.40
+20    0.3324       88.44      0.3435      88.60
+21    0.3206       88.79      0.3564      88.05
+22    0.3076       89.27      0.3314      88.73
+23    0.3009       89.54      0.3126      89.34
+24    0.2908       89.78      0.3258      89.03
+25    0.2810       90.02      0.3156      89.81
+26    0.2732       90.51      0.3135      89.33
+27    0.2615       90.69      0.3084      89.66
+28    0.2516       91.19      0.2968      89.93
+29    0.2492       91.27      0.3126      89.63
+30    0.2396       91.56      0.2895      90.30
+31    0.2323       91.78      0.2858      90.51
+32    0.2226       92.21      0.2832      90.67
+33    0.2206       92.40      0.2863      90.59
+34    0.2121       92.63      0.2907      90.66
+35    0.2057       92.82      0.2839      90.89
