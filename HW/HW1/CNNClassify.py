@@ -201,6 +201,38 @@ def evaluate_accuracy(model: nn.Module, loader: DataLoader, device: torch.device
         total += y.size(0)
     return 100.0 * correct / max(1, total)
 
+@torch.no_grad()
+def evaluate_metrics(
+    model: nn.Module,
+    loader: DataLoader,
+    device: torch.device,
+    criterion: nn.Module
+) -> Tuple[float, float]:
+    """
+    Returns:
+        avg_loss: average loss over dataset
+        accuracy: percentage correct
+    """
+    model.eval()
+    total_loss = 0.0
+    correct = 0
+    total = 0
+
+    for x, y in loader:
+        x = x.to(device, non_blocking=True)
+        y = y.to(device, non_blocking=True)
+
+        logits = model(x)
+        loss = criterion(logits, y)
+
+        total_loss += loss.item() * x.size(0)
+        pred = torch.argmax(logits, dim=1)
+        correct += (pred == y).sum().item()
+        total += y.size(0)
+
+    avg_loss = total_loss / max(1, total)
+    accuracy = 100.0 * correct / max(1, total)
+    return avg_loss, accuracy
 
 def train():
     # Device selection (GPU if available)
@@ -218,32 +250,58 @@ def train():
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
 
     # Training settings
-    epochs = 35  # typically enough for >=75% with this net + aug
+    epochs = 35
     os.makedirs(MODEL_DIR, exist_ok=True)
 
     best_acc = 0.0
 
+    # Optional header line
+    print("Loop  Train Loss  Train Acc%  Test Loss  Test Acc%")
+
     for epoch in range(1, epochs + 1):
         model.train()
-        running_loss = 0.0
+
+        train_loss_sum = 0.0
+        train_correct = 0
+        train_total = 0
 
         for x, y in train_loader:
             x = x.to(device, non_blocking=True)
             y = y.to(device, non_blocking=True)
 
             optimizer.zero_grad(set_to_none=True)
+
             logits = model(x)
             loss = criterion(logits, y)
+
             loss.backward()
             optimizer.step()
 
-            running_loss += loss.item() * x.size(0)
+            # Accumulate training stats
+            train_loss_sum += loss.item() * x.size(0)
+            pred = torch.argmax(logits, dim=1)
+            train_correct += (pred == y).sum().item()
+            train_total += y.size(0)
 
         scheduler.step()
 
-        test_acc = evaluate_accuracy(model, test_loader, device)
-        print(f"Epoch {epoch:02d}/{epochs}  Test Accuracy: {test_acc:.2f}%")
+        # Final train stats for this epoch
+        train_loss = train_loss_sum / max(1, train_total)
+        train_acc = 100.0 * train_correct / max(1, train_total)
 
+        # Test stats
+        test_loss, test_acc = evaluate_metrics(model, test_loader, device, criterion)
+
+        # Print required statistics
+        print(
+            f"{epoch:02d}    "
+            f"{train_loss:.4f}      "
+            f"{train_acc:6.2f}      "
+            f"{test_loss:.4f}     "
+            f"{test_acc:6.2f}"
+        )
+
+        # Save best model by test accuracy
         if test_acc > best_acc:
             best_acc = test_acc
             torch.save(
@@ -253,7 +311,6 @@ def train():
                 },
                 MODEL_PATH
             )
-
 
 # -----------------------------
 # Testing: predict + visualize conv1 outputs
