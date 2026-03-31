@@ -1,0 +1,11 @@
+Python 3.11.4
+/home/u21/brianmorgan/repos/ECE523_ML/Project
+Average metrics:
+  rmse_2d_measured: 153.318464
+  rmse_2d_filtered: 153.318433
+  rmse_3d: 5.292701
+  visibility_f1: 0.000000
+  smoothness_filtered: 10.217506
+  carry_err_m: 12.855859
+  apex_err_m: 3.309640
+Saved results to outputs/test_results
