@@ -1,6 +1,6 @@
 #Custom ignores
 data/
-
+!Project/golf_tracer/data/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
