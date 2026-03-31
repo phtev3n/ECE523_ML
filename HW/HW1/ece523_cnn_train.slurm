@@ -19,4 +19,4 @@
 
 python --version
 pwd
-python CNNClassify.py train
+python CNNclassify.py train

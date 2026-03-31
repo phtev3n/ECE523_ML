@@ -1,0 +1,14 @@
+device: cuda
+image_size: [256, 256]
+sequence_length: 24
+max_test_sequences: 20
+kalman:
+  dt: 0.0166667
+  process_var: 15.0
+  meas_var: 4.0
+  max_coast_frames: 8
+render:
+  tracer_thickness: 2
+  draw_measurements: true
+  draw_filtered: true
+  draw_reprojected: true

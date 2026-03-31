@@ -1,0 +1,19 @@
+batch_size: 1
+device: cuda
+epochs: 1
+learning_rate: 0.0003
+loss:
+  below_ground_weight: 0.2
+  eot_weight: 0.5
+  recon3d_weight: 1.0
+model:
+  hidden_size: 128
+  num_layers: 2
+num_workers: 0
+save_path: outputs/trajectory_smoke.pt
+seed: 42
+sequence_length: 12
+synthetic:
+  fps: 60.0
+  num_sequences: 8
+train_split: 0.8
