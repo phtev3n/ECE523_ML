@@ -27,7 +27,7 @@ def make_loader(dataset, batch_size: int, shuffle: bool, num_workers: int, pin_m
         shuffle=shuffle,
         num_workers=num_workers,
         pin_memory=pin_memory,
-        persistent_workers=num_workers > 0,
+        persistent_workers=(num_workers > 0),
     )
 
 
@@ -68,18 +68,23 @@ def main():
     train_ds, val_ds = random_split(dataset, [n_train, n_val], generator=split_gen)
 
     pin_memory = device.type == "cuda"
+
+    # Clamp workers to a conservative value for cluster stability
+    num_workers = int(cfg.get("num_workers", 0))
+    num_workers = max(0, min(num_workers, 1))
+
     train_loader = make_loader(
         train_ds,
         batch_size=cfg["batch_size"],
         shuffle=True,
-        num_workers=cfg["num_workers"],
+        num_workers=num_workers,
         pin_memory=pin_memory,
     )
     val_loader = make_loader(
         val_ds,
         batch_size=cfg["batch_size"],
         shuffle=False,
-        num_workers=cfg["num_workers"],
+        num_workers=num_workers,
         pin_memory=pin_memory,
     )
 
@@ -130,7 +135,7 @@ def main():
 
             opt.zero_grad(set_to_none=True)
 
-            with torch.cuda.amp.autocast(enabled=use_amp):
+            with torch.amp.autocast("cuda", enabled=use_amp):
                 pred = model(x)
                 losses = trajectory_losses(pred, target, cfg["loss"])
 
@@ -143,7 +148,7 @@ def main():
             bs = x.size(0)
             train_samples += bs
             train_loss += losses["loss"].item() * bs
-            train_xyz += losses.get("xyz_loss", torch.tensor(0.0)).item() * bs
+            train_xyz += losses.get("xyz_loss", losses.get("recon3d_loss", torch.tensor(0.0))).item() * bs
             train_eot += losses.get("eot_loss", torch.tensor(0.0)).item() * bs
             train_bg += losses.get("below_ground_loss", torch.tensor(0.0)).item() * bs
 
@@ -168,14 +173,14 @@ def main():
                     "eot": batch["eot"].to(device, non_blocking=pin_memory),
                 }
 
-                with torch.cuda.amp.autocast(enabled=use_amp):
+                with torch.amp.autocast("cuda", enabled=use_amp):
                     pred = model(x)
                     losses = trajectory_losses(pred, target, cfg["loss"])
 
                 bs = x.size(0)
                 val_samples += bs
                 val_loss += losses["loss"].item() * bs
-                val_xyz += losses.get("xyz_loss", torch.tensor(0.0)).item() * bs
+                val_xyz += losses.get("xyz_loss", losses.get("recon3d_loss", torch.tensor(0.0))).item() * bs
                 val_eot += losses.get("eot_loss", torch.tensor(0.0)).item() * bs
                 val_bg += losses.get("below_ground_loss", torch.tensor(0.0)).item() * bs
 

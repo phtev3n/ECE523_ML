@@ -139,7 +139,7 @@ def main():
 
             opt.zero_grad(set_to_none=True)
 
-            with torch.cuda.amp.autocast(enabled=use_amp):
+            with torch.cuda.amp.autocast("cuda", enabled=use_amp):
                 pred = model(image)
                 losses = detector_losses(pred, target, cfg["loss"])
 
@@ -193,7 +193,7 @@ def main():
                 if "uncertainty" in batch:
                     target["uncertainty"] = batch["uncertainty"].to(device, non_blocking=pin_memory)
 
-                with torch.cuda.amp.autocast(enabled=use_amp):
+                with torch.cuda.amp.autocast("cuda", enabled=use_amp):
                     pred = model(image)
                     losses = detector_losses(pred, target, cfg["loss"])
 

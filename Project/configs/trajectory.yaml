@@ -1,9 +1,9 @@
 seed: 42
 device: cuda
-epochs: 50
-batch_size: 16
+epochs: 20
+batch_size: 1
 learning_rate: 0.0003
-num_workers: 2
+num_workers: 0
 sequence_length: 24
 train_split: 0.8
 save_path: outputs/trajectory_last.pt
