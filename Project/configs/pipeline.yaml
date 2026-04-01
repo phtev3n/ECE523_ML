@@ -12,3 +12,6 @@ render:
   draw_measurements: true
   draw_filtered: true
   draw_reprojected: true
+tracking:
+  visibility_threshold: 0.20
+  force_measurement_update: true  

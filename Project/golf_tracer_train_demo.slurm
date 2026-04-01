@@ -19,6 +19,6 @@
 
 python --version
 pwd
-python scripts/make_demo_data.py --out_dir demo_dataset --num_sequences 200
+python scripts/make_demo_data.py --out_dir demo_dataset --num_sequences 500
 python scripts/train_detector.py --config configs/detector.yaml --dataset_root demo_dataset
 python scripts/train_trajectory.py --config configs/trajectory.yaml --dataset_root demo_dataset

@@ -125,7 +125,7 @@ def main():
                 "rmse_3d": rmse(result.xyz_pred, gt_xyz),
                 "visibility_f1": binary_f1(result.visible_prob, gt_vis, thresh=args.vis_threshold),
                 "smoothness_filtered": smoothness(result.filtered_uv),
-                "carry_err_m": abs(
+                "carry_err_m": abs( 
                     estimate_carry_from_xyz(result.xyz_pred) - estimate_carry_from_xyz(gt_xyz)
                 ),
                 "apex_err_m": abs(apex_height(result.xyz_pred) - apex_height(gt_xyz)),

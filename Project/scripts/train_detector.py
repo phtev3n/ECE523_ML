@@ -177,6 +177,11 @@ def main():
         val_visible_correct = 0.0
         val_visible_count = 0.0
 
+        val_pos_prob_sum = 0.0
+        val_neg_prob_sum = 0.0
+        val_pos_count = 0.0
+        val_neg_count = 0.0
+
         with torch.no_grad():
             for batch in val_loader:
                 image = batch["image"].to(device, non_blocking=pin_memory)
@@ -202,15 +207,26 @@ def main():
 
                 visible_logit = pred.get("visible_logit")
                 if visible_logit is not None:
-                    visible_prob = torch.sigmoid(visible_logit)
+                    visible_prob = torch.sigmoid(visible_logit).view(-1)
+                    visible_true = target["visible"].float().view(-1)
                     visible_pred = (visible_prob > 0.35).float()
-                    visible_true = target["visible"].float()
 
                     val_visible_prob_sum += visible_prob.sum().item()
                     val_visible_pred_pos += visible_pred.sum().item()
                     val_visible_true_pos += visible_true.sum().item()
                     val_visible_correct += (visible_pred == visible_true).float().sum().item()
                     val_visible_count += visible_true.numel()
+
+                    pos_mask = visible_true > 0.5
+                    neg_mask = ~pos_mask
+
+                    if pos_mask.any():
+                        val_pos_prob_sum += visible_prob[pos_mask].sum().item()
+                        val_pos_count += pos_mask.sum().item()
+
+                    if neg_mask.any():
+                        val_neg_prob_sum += visible_prob[neg_mask].sum().item()
+                        val_neg_count += neg_mask.sum().item()
 
         train_loss /= max(train_samples, 1)
         train_heatmap /= max(train_samples, 1)
@@ -237,6 +253,9 @@ def main():
             true_positive_rate = 0.0
             visible_accuracy = 0.0
 
+        pos_prob_mean = val_pos_prob_sum / max(val_pos_count, 1.0)
+        neg_prob_mean = val_neg_prob_sum / max(val_neg_count, 1.0)
+
         print(
             f"[detector] epoch={epoch + 1} "
             f"train_loss={train_loss:.6f} val_loss={val_loss:.6f} "
@@ -248,6 +267,8 @@ def main():
             f"val_vis_pred_pos_rate={pred_positive_rate:.4f} "
             f"val_vis_true_pos_rate={true_positive_rate:.4f} "
             f"val_vis_acc={visible_accuracy:.4f} "
+            f"val_vis_prob_pos_mean={pos_prob_mean:.4f} "
+            f"val_vis_prob_neg_mean={neg_prob_mean:.4f} "
             f"lr={opt.param_groups[0]['lr']:.2e}"
         )
 

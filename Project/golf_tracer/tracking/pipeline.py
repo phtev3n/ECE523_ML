@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
+
 import numpy as np
 import torch
+
 from golf_tracer.models.detector import decode_heatmap
 from golf_tracer.tracking.kalman import Kalman2D
 from golf_tracer.utils.geometry import project_points
@@ -26,19 +29,47 @@ class GolfBallTrackingPipeline:
     @torch.no_grad()
     def run_sequence(self, frames_tensor: torch.Tensor, camera: dict) -> PipelineOutput:
         T = frames_tensor.shape[0]
+
         detector_uv = []
         visible_prob = []
         uncertainty = []
+
+        vis_threshold = float(self.config.get("tracking", {}).get("visibility_threshold", 0.35))
+        force_measurement_update = bool(self.config.get("tracking", {}).get("force_measurement_update", False))
+
+        img_h, img_w = frames_tensor.shape[-2:]
+
         for t in range(T):
-            pred = self.detector(frames_tensor[t : t + 1].to(self.device))
-            uv_small = decode_heatmap(pred["heatmap"], pred["offset"])[0].cpu().numpy()
+            frame = frames_tensor[t : t + 1].to(self.device)
+            pred = self.detector(frame)
+
+            uv_small = decode_heatmap(pred["heatmap"], pred["offset"])[0].detach().cpu().numpy()
             hm_h, hm_w = pred["heatmap"].shape[-2:]
-            img_h, img_w = frames_tensor.shape[-2:]
+
             sx = img_w / hm_w
             sy = img_h / hm_h
-            uv = np.array([uv_small[0] * sx, uv_small[1] * sy], dtype=np.float32)
-            vis = torch.sigmoid(pred["visible_logit"]).item()
-            lv = pred["log_var"][0, :, int(round(uv_small[1])) % hm_h, int(round(uv_small[0])) % hm_w].mean().item()
+
+            uv = np.array(
+                [
+                    uv_small[0] * sx,
+                    uv_small[1] * sy,
+                ],
+                dtype=np.float32,
+            )
+
+            # Clamp decoded image-plane coordinates
+            uv[0] = np.clip(uv[0], 0.0, img_w - 1.0)
+            uv[1] = np.clip(uv[1], 0.0, img_h - 1.0)
+
+            vis = torch.sigmoid(pred["visible_logit"]).view(-1)[0].item()
+
+            if "log_var" in pred:
+                x_idx = int(np.clip(round(float(uv_small[0])), 0, hm_w - 1))
+                y_idx = int(np.clip(round(float(uv_small[1])), 0, hm_h - 1))
+                lv = pred["log_var"][0, :, y_idx, x_idx].mean().item()
+            else:
+                lv = 0.0
+
             detector_uv.append(uv)
             visible_prob.append(vis)
             uncertainty.append(lv)
@@ -49,24 +80,30 @@ class GolfBallTrackingPipeline:
 
         kf = Kalman2D(**self.config["kalman"])
         filtered = []
+
         for i, uv in enumerate(detector_uv):
             if not kf.initialized:
                 kf.init(uv)
                 filtered.append(uv.copy())
                 continue
 
-            pred_uv = kf.predict()
-            if visible_prob[i] > 0.35:
+            kf.predict()
+
+            if force_measurement_update:
                 filt_uv = kf.update(uv)
-            elif kf.can_coast:
-                filt_uv = kf.miss()
             else:
-                # After extended dropout, re-anchor to the detector measurement.
-                kf.init(uv)
-                filt_uv = uv.copy()
+                if visible_prob[i] > vis_threshold:
+                    filt_uv = kf.update(uv)
+                elif getattr(kf, "can_coast", False):
+                    filt_uv = kf.miss()
+                else:
+                    kf.init(uv)
+                    filt_uv = uv.copy()
+
             filtered.append(filt_uv)
 
         filtered = np.asarray(filtered, dtype=np.float32)
+
         traj_features = np.concatenate(
             [
                 filtered,
@@ -76,10 +113,12 @@ class GolfBallTrackingPipeline:
             ],
             axis=1,
         )
+
         traj_tensor = torch.from_numpy(traj_features[None]).float().to(self.device)
         traj_pred = self.trajectory_model(traj_tensor)
-        xyz = traj_pred["xyz"][0].cpu().numpy()
+        xyz = traj_pred["xyz"][0].detach().cpu().numpy()
         uv_rep = project_points(xyz, camera)
+
         return PipelineOutput(
             measured_uv=detector_uv,
             filtered_uv=filtered,
