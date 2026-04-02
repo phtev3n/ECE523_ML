@@ -108,7 +108,7 @@ def main():
     )
 
     use_amp = device.type == "cuda"
-    scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
+    scaler = torch.amp.GradScaler('cuda', enabled=use_amp)
 
     best_val = float("inf")
     save_path = Path(cfg["save_path"])
@@ -139,7 +139,7 @@ def main():
 
             opt.zero_grad(set_to_none=True)
 
-            with torch.cuda.amp.autocast("cuda", enabled=use_amp):
+            with torch.amp.autocast('cuda', enabled=use_amp):
                 pred = model(image)
                 losses = detector_losses(pred, target, cfg["loss"])
 
@@ -193,7 +193,7 @@ def main():
                 if "uncertainty" in batch:
                     target["uncertainty"] = batch["uncertainty"].to(device, non_blocking=pin_memory)
 
-                with torch.cuda.amp.autocast("cuda", enabled=use_amp):
+                with torch.amp.autocast('cuda', enabled=use_amp):
                     pred = model(image)
                     losses = detector_losses(pred, target, cfg["loss"])
 

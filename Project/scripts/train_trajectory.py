@@ -108,7 +108,7 @@ def main():
     )
 
     use_amp = device.type == "cuda"
-    scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
+    scaler = torch.amp.GradScaler('cuda', enabled=use_amp)
 
     best_val = float("inf")
     save_path = Path(cfg["save_path"])
@@ -135,7 +135,7 @@ def main():
 
             opt.zero_grad(set_to_none=True)
 
-            with torch.amp.autocast("cuda", enabled=use_amp):
+            with torch.amp.autocast('cuda', enabled=use_amp):
                 pred = model(x)
                 losses = trajectory_losses(pred, target, cfg["loss"])
 
@@ -173,7 +173,7 @@ def main():
                     "eot": batch["eot"].to(device, non_blocking=pin_memory),
                 }
 
-                with torch.amp.autocast("cuda", enabled=use_amp):
+                with torch.amp.autocast('cuda', enabled=use_amp):
                     pred = model(x)
                     losses = trajectory_losses(pred, target, cfg["loss"])
 
