@@ -14,7 +14,7 @@ def detector_losses(pred: dict, target: dict, weights: dict) -> dict:
     visible_tgt = target["visible"].float().view_as(visible_logit)
 
     # Better than plain MSE for sparse small-object heatmaps
-    heatmap_loss = F.binary_cross_entropy(heatmap_pred, heatmap_tgt)
+    heatmap_loss = F.binary_cross_entropy_with_logits(heatmap_pred, heatmap_tgt)
 
     # Only supervise offsets near positive target regions
     pos_mask = (heatmap_tgt > 0.1).float()
