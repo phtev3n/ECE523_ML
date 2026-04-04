@@ -13,5 +13,8 @@ render:
   draw_filtered: true
   draw_reprojected: true
 tracking:
-  visibility_threshold: 0.20
-  force_measurement_update: true  
+  visibility_threshold: 0.35
+  # Set to false so the Kalman filter uses the visibility head to gate updates.
+  # With force_measurement_update: true every bad detection is blindly accepted,
+  # which is why rmse_2d_filtered equalled rmse_2d_measured.
+  force_measurement_update: false

@@ -19,37 +19,100 @@ def gaussian_2d(h: int, w: int, cx: float, cy: float, sigma: float) -> np.ndarra
 
 def make_background(h: int, w: int) -> np.ndarray:
     img = np.zeros((h, w, 3), dtype=np.uint8)
-    img[:] = (40, 100, 40)
-    horizon = int(h * 0.35)
-    img[:horizon] = (170, 210, 235)
 
-    for _ in range(12):
+    # --- Sky: clear blue / overcast / warm sunrise ---
+    sky_type = random.randint(0, 2)
+    if sky_type == 0:  # clear blue
+        sky = (
+            random.randint(160, 220),  # B
+            random.randint(190, 235),  # G
+            random.randint(80, 150),   # R
+        )
+    elif sky_type == 1:  # overcast grey
+        v = random.randint(140, 210)
+        sky = (v, v, v)
+    else:  # warm sunrise / golden hour
+        sky = (
+            random.randint(80, 160),
+            random.randint(120, 185),
+            random.randint(180, 240),
+        )
+
+    # --- Grass: vary shade and saturation ---
+    grass = (
+        random.randint(15, 55),   # B
+        random.randint(70, 140),  # G
+        random.randint(15, 60),   # R
+    )
+
+    horizon = int(h * random.uniform(0.28, 0.48))
+    img[:] = grass
+    img[:horizon] = sky
+
+    # Add subtle per-pixel noise to grass to break uniformity
+    grass_region = img[horizon:].astype(np.int16)
+    grass_noise = np.random.randint(-12, 13, grass_region.shape, dtype=np.int16)
+    img[horizon:] = np.clip(grass_region + grass_noise, 0, 255).astype(np.uint8)
+
+    # Grass stripe / mowing pattern (horizontal bands of slightly different shade)
+    stripe_h = random.randint(8, 20)
+    for row in range(horizon, h, stripe_h * 2):
+        shade = random.randint(-8, 8)
+        end = min(h, row + stripe_h)
+        band = img[row:end].astype(np.int16)
+        img[row:end] = np.clip(band + shade, 0, 255).astype(np.uint8)
+
+    # Tree silhouettes near horizon
+    for _ in range(random.randint(0, 5)):
+        tx = random.randint(0, w - 1)
+        tw = random.randint(8, 28)
+        th = random.randint(15, 55)
+        cv2.rectangle(img, (tx, horizon - th), (min(w - 1, tx + tw), horizon + 4),
+                      (10, random.randint(45, 75), 10), -1)
+
+    # Bunkers / fairway patches
+    for _ in range(random.randint(6, 18)):
         x1 = random.randint(0, w - 1)
         y1 = random.randint(horizon, h - 1)
-        x2 = min(w - 1, x1 + random.randint(30, 140))
-        y2 = min(h - 1, y1 + random.randint(5, 20))
-        cv2.rectangle(img, (x1, y1), (x2, y2), (20, 80, 20), -1)
+        x2 = min(w - 1, x1 + random.randint(20, 130))
+        y2 = min(h - 1, y1 + random.randint(4, 22))
+        shade = random.randint(-28, 12)
+        col = tuple(max(0, min(255, c + shade)) for c in grass)
+        cv2.rectangle(img, (x1, y1), (x2, y2), col, -1)
 
     return img
 
 
 def simulate_ballistics(T: int, fps: float) -> np.ndarray:
+    """Simulate a golf ball trajectory in camera-frame coordinates.
+
+    Coordinate convention (matches project() pinhole model):
+      x = lateral  (horizontal in image via u = fx*x/z + cx)
+      y = height   (vertical in image via v = fy*(cam_h-y)/z + cy)
+      z = depth    (ball flies away from camera; z must be positive)
+
+    The ball therefore flies primarily in the +z direction with a small
+    lateral drift from side-spin.  Swapping forward/lateral was the
+    previous bug that caused the ball to exit the frame in ~6 frames.
+    """
     dt = 1.0 / fps
     speed = random.uniform(45.0, 75.0)
     launch = math.radians(random.uniform(10.0, 28.0))
     side = math.radians(random.uniform(-8.0, 8.0))
     g = 9.81
 
-    vx = speed * math.cos(launch) * math.cos(side)
-    vy = speed * math.sin(launch)
-    vz = speed * math.cos(launch) * math.sin(side) + 40.0
+    # Forward (depth) speed and vertical speed from launch angle
+    v_fwd = speed * math.cos(launch)           # ~42–70 m/s along z (away from camera)
+    vy = speed * math.sin(launch)              # ~8–35 m/s upward
+    # Lateral drift is only the side-spin component (stays small)
+    v_lat = speed * math.cos(launch) * math.sin(side)   # ±7 m/s at most
 
     pts = []
     for i in range(T):
         t = i * dt
-        x = vx * t
-        y = max(0.0, vy * t - 0.5 * g * t * t + 0.2)
-        z = max(5.0, vz * t + 10.0)
+        x = v_lat * t                                       # lateral; near 0
+        y = max(0.0, vy * t - 0.5 * g * t * t + 0.2)      # height above ground
+        z = v_fwd * t + 10.0                                # depth; starts 10 m out
         pts.append([x, y, z])
 
     return np.asarray(pts, dtype=np.float32)
@@ -72,6 +135,9 @@ class SyntheticGolfTrajectoryDataset(Dataset):
         mode: str = "detector",
         detector_scale: float = 0.25,
         detector_sigma: float = 2.0,
+        # Gaussian noise (pixels) added to UV in trajectory-mode features to
+        # simulate detector error and close the train/inference domain gap.
+        detector_noise_std: float = 0.0,
     ):
         self.num_sequences = num_sequences
         self.sequence_length = sequence_length
@@ -80,22 +146,25 @@ class SyntheticGolfTrajectoryDataset(Dataset):
         self.mode = mode
         self.detector_scale = detector_scale
         self.detector_sigma = detector_sigma
+        self.detector_noise_std = detector_noise_std
 
-        self.camera = {
-            "fx": self.w * 1.5,
-            "fy": self.h * 1.5,
-            "cx": self.w * 0.5,
-            "cy": self.h * 0.55,
-            "camera_height_m": 1.3,
-        }
+    def _sample_camera(self) -> dict:
+        """Sample randomised camera intrinsics per sequence for diversity."""
+        fx = self.w * random.uniform(1.2, 1.8)
+        fy = self.h * random.uniform(1.2, 1.8)
+        cx = self.w * random.uniform(0.44, 0.56)
+        cy = self.h * random.uniform(0.48, 0.62)
+        cam_h = random.uniform(0.8, 2.0)
+        return {"fx": fx, "fy": fy, "cx": cx, "cy": cy, "camera_height_m": cam_h}
 
     def __len__(self):
         return self.num_sequences
 
     def __getitem__(self, index):
         T = self.sequence_length
+        camera = self._sample_camera()
         xyz = simulate_ballistics(T, self.fps)
-        uv = project(xyz, self.camera)
+        uv = project(xyz, camera)
 
         frames = []
         visible = []
@@ -106,6 +175,9 @@ class SyntheticGolfTrajectoryDataset(Dataset):
         out_h = int(round(self.h * self.detector_scale))
         out_w = int(round(self.w * self.detector_scale))
 
+        # Per-sequence random dropout rate (3–15 %) to vary visibility patterns
+        dropout_rate = random.uniform(0.03, 0.15)
+
         for t in range(T):
             frame = make_background(self.h, self.w)
             u, v = uv[t]
@@ -113,11 +185,14 @@ class SyntheticGolfTrajectoryDataset(Dataset):
             vis = 1.0
             if u < 0 or u >= self.w or v < 0 or v >= self.h:
                 vis = 0.0
-            if random.random() < 0.08:
+            if random.random() < dropout_rate:
                 vis = 0.0
 
             if vis > 0.5:
-                radius = random.randint(2, 4)
+                # Scale ball radius with depth so far-away balls look smaller
+                z_depth = float(xyz[t, 2])
+                base_r = random.uniform(3.0, 5.5)
+                radius = max(1, int(round(base_r * 10.0 / max(z_depth, 5.0))))
                 cv2.circle(frame, (int(round(u)), int(round(v))), radius, (245, 245, 245), -1)
                 if random.random() < 0.4:
                     k = random.choice([3, 5, 7])
@@ -136,12 +211,12 @@ class SyntheticGolfTrajectoryDataset(Dataset):
 
                 hm = gaussian_2d(out_h, out_w, hu, hv, sigma=self.detector_sigma)
 
-                cx = int(np.clip(np.floor(hu), 0, out_w - 1))
-                cy = int(np.clip(np.floor(hv), 0, out_h - 1))
+                cx_idx = int(np.clip(np.floor(hu), 0, out_w - 1))
+                cy_idx = int(np.clip(np.floor(hv), 0, out_h - 1))
 
-                off[0, cy, cx] = hu - cx
-                off[1, cy, cx] = hv - cy
-                unc[:, cy, cx] = 1.0
+                off[0, cy_idx, cx_idx] = hu - cx_idx
+                off[1, cy_idx, cx_idx] = hv - cy_idx
+                unc[:, cy_idx, cx_idx] = 1.0
 
             frames.append(frame)
             visible.append(vis)
@@ -178,10 +253,21 @@ class SyntheticGolfTrajectoryDataset(Dataset):
                 "uncertainty": uncertainties_t[t],
             }
 
+        # Trajectory mode: optionally corrupt UV to simulate detector noise so
+        # the LSTM learns to handle imperfect 2-D inputs at inference time.
+        if self.detector_noise_std > 0:
+            uv_feat = uv_t + torch.randn_like(uv_t) * self.detector_noise_std
+            vis_feat = torch.clamp(
+                visible_t + torch.randn_like(visible_t) * 0.12, 0.0, 1.0
+            )
+        else:
+            uv_feat = uv_t
+            vis_feat = visible_t
+
         features = torch.cat(
             [
-                uv_t,
-                visible_t[:, None],
+                uv_feat,
+                vis_feat[:, None],
                 torch.zeros(T, 1, dtype=torch.float32),
                 torch.linspace(0.0, 1.0, T, dtype=torch.float32)[:, None],
             ],
@@ -195,7 +281,7 @@ class SyntheticGolfTrajectoryDataset(Dataset):
             "visible": visible_t,
             "features": features,
             "eot": eot,
-            "camera": self.camera,
+            "camera": camera,
         }
 
 

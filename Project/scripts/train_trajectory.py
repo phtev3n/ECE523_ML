@@ -125,9 +125,23 @@ def main():
         train_bg = 0.0
         train_samples = 0
 
+        noise_std = float(cfg.get("detector_noise_std", 0.0))
+
         train_pbar = tqdm(train_loader, desc=f"trajectory train epoch {epoch + 1}/{cfg['epochs']}")
         for batch in train_pbar:
             x = batch["features"].to(device, non_blocking=pin_memory)
+
+            # Inject simulated detector noise into UV (channels 0–1) and visibility
+            # (channel 2) so the LSTM learns to handle imperfect 2-D inputs.
+            # This closes the gap between ground-truth features used during training
+            # and the noisy detector outputs seen at inference.
+            if noise_std > 0.0:
+                x = x.clone()
+                x[:, :, :2] = x[:, :, :2] + torch.randn_like(x[:, :, :2]) * noise_std
+                x[:, :, 2] = torch.clamp(
+                    x[:, :, 2] + torch.randn_like(x[:, :, 2]) * 0.12, 0.0, 1.0
+                )
+
             target = {
                 "xyz": batch["xyz"].to(device, non_blocking=pin_memory),
                 "eot": batch["eot"].to(device, non_blocking=pin_memory),
