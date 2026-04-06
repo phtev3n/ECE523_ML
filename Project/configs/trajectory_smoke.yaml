@@ -6,6 +6,7 @@ loss:
   below_ground_weight: 0.2
   eot_weight: 0.5
   recon3d_weight: 1.0
+  spin_weight: 0.5
 model:
   hidden_size: 128
   num_layers: 2

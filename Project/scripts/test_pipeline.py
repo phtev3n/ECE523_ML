@@ -17,10 +17,15 @@ from golf_tracer.models.detector import MultiScaleBallDetector
 from golf_tracer.models.trajectory_lifter import TrajectoryLifter
 from golf_tracer.tracking.pipeline import GolfBallTrackingPipeline
 from golf_tracer.utils.config import load_config
-from golf_tracer.utils.geometry import apex_height, estimate_carry_from_xyz
+from golf_tracer.utils.geometry import (
+    apex_height,
+    compute_ball_metrics,
+    estimate_carry_from_xyz,
+    estimate_spin_from_trajectory,
+)
 from golf_tracer.utils.io import ensure_dir, write_json
 from golf_tracer.utils.metrics import binary_f1, rmse, smoothness
-from golf_tracer.utils.render import draw_tracer, render_video
+from golf_tracer.utils.render import draw_metrics_panel, draw_tracer, render_video
 from golf_tracer.utils.train import resolve_device
 
 
@@ -118,6 +123,23 @@ def main():
             if has_bad_values(result.measured_uv) or has_bad_values(result.filtered_uv) or has_bad_values(result.xyz_pred):
                 print(f"Warning: NaN/Inf detected in sequence {idx}")
 
+            # ---- Ball flight metrics from predicted 3D trajectory ----
+            fps_seq = float(cfg.get("render", {}).get("fps", 60.0))
+            ball_metrics = compute_ball_metrics(result.xyz_pred, fps_seq)
+
+            # Spin: use model spin_head output; fall back to physics fitting.
+            spin_model = result.spin_pred
+            if np.any(spin_model != 0.0):
+                spin_display = {
+                    "backspin_rpm": float(spin_model[0]),
+                    "sidespin_rpm": float(spin_model[1]),
+                }
+            else:
+                try:
+                    spin_display = estimate_spin_from_trajectory(result.xyz_pred, fps_seq)
+                except Exception:
+                    spin_display = None
+
             row = {
                 "sequence": idx,
                 "rmse_2d_measured": rmse(result.measured_uv, gt_uv, gt_vis > 0.5),
@@ -125,13 +147,16 @@ def main():
                 "rmse_3d": rmse(result.xyz_pred, gt_xyz),
                 "visibility_f1": binary_f1(result.visible_prob, gt_vis, thresh=args.vis_threshold),
                 "smoothness_filtered": smoothness(result.filtered_uv),
-                "carry_err_m": abs( 
+                "carry_err_m": abs(
                     estimate_carry_from_xyz(result.xyz_pred) - estimate_carry_from_xyz(gt_xyz)
                 ),
                 "apex_err_m": abs(apex_height(result.xyz_pred) - apex_height(gt_xyz)),
                 "visible_prob_mean": float(np.mean(result.visible_prob)),
                 "visible_prob_max": float(np.max(result.visible_prob)),
                 "gt_visible_rate": float(np.mean(gt_vis)),
+                **{f"ball_{k}": v for k, v in ball_metrics.items()},
+                "spin_backspin_rpm": float(spin_display["backspin_rpm"]) if spin_display else 0.0,
+                "spin_sidespin_rpm": float(spin_display["sidespin_rpm"]) if spin_display else 0.0,
             }
             rows.append(row)
 
@@ -141,6 +166,8 @@ def main():
                 "xyz_pred": np.asarray(result.xyz_pred).tolist(),
                 "uv_reprojected": np.asarray(result.uv_reprojected).tolist(),
                 "visible_prob": np.asarray(result.visible_prob).tolist(),
+                "ball_metrics": ball_metrics,
+                "spin": spin_display,
                 "metrics": row,
             }
             write_json(out_dir / f"seq_{idx:04d}_predictions.json", pred_json)
@@ -164,6 +191,8 @@ def main():
                         )
                     if cfg["render"]["draw_reprojected"]:
                         draw_tracer(bgr, result.uv_reprojected[: t + 1], color=(0, 100, 255), thickness=1)
+                    if cfg["render"].get("draw_metrics", True) and ball_metrics:
+                        draw_metrics_panel(bgr, ball_metrics, spin=spin_display)
                     vis_frames.append(bgr)
 
                 fps = float(cfg.get("render", {}).get("fps", 60.0))

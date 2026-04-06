@@ -75,10 +75,24 @@ def trajectory_losses(pred: dict, target: dict, weights: dict) -> dict:
         + weights["below_ground_weight"] * below_ground_loss
     )
 
-    return {
+    out = {
         "loss": total,
         "eot_loss": eot_loss.detach(),
         "recon3d_loss": recon3d_loss.detach(),
         "xyz_loss": recon3d_loss.detach(),
         "below_ground_loss": below_ground_loss.detach(),
     }
+
+    # Spin loss: only computed when ground-truth spin is available (synthetic data).
+    # Targets and predictions are normalised by [5000, 1000] rpm so both
+    # backspin and sidespin contribute at roughly equal scale to the loss.
+    spin_weight = weights.get("spin_weight", 0.0)
+    if spin_weight > 0.0 and "spin" in pred and "spin" in target:
+        spin_scale = torch.tensor([5000.0, 1000.0], device=pred["spin"].device, dtype=pred["spin"].dtype)
+        spin_loss = F.mse_loss(pred["spin"] / spin_scale, target["spin"] / spin_scale)
+        out["loss"] = out["loss"] + spin_weight * spin_loss
+        out["spin_loss"] = spin_loss.detach()
+    else:
+        out["spin_loss"] = torch.zeros((), device=pred["xyz"].device)
+
+    return out

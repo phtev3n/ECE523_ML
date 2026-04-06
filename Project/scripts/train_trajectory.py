@@ -123,6 +123,7 @@ def main():
         train_xyz = 0.0
         train_eot = 0.0
         train_bg = 0.0
+        train_spin = 0.0
         train_samples = 0
 
         noise_std = float(cfg.get("detector_noise_std", 0.0))
@@ -146,6 +147,8 @@ def main():
                 "xyz": batch["xyz"].to(device, non_blocking=pin_memory),
                 "eot": batch["eot"].to(device, non_blocking=pin_memory),
             }
+            if "spin" in batch:
+                target["spin"] = batch["spin"].to(device, non_blocking=pin_memory)
 
             opt.zero_grad(set_to_none=True)
 
@@ -165,6 +168,7 @@ def main():
             train_xyz += losses.get("xyz_loss", losses.get("recon3d_loss", torch.tensor(0.0))).item() * bs
             train_eot += losses.get("eot_loss", torch.tensor(0.0)).item() * bs
             train_bg += losses.get("below_ground_loss", torch.tensor(0.0)).item() * bs
+            train_spin += losses.get("spin_loss", torch.tensor(0.0)).item() * bs
 
             train_pbar.set_postfix(
                 loss=f"{losses['loss'].item():.4f}",
@@ -177,6 +181,7 @@ def main():
         val_xyz = 0.0
         val_eot = 0.0
         val_bg = 0.0
+        val_spin = 0.0
         val_samples = 0
 
         with torch.no_grad():
@@ -186,6 +191,8 @@ def main():
                     "xyz": batch["xyz"].to(device, non_blocking=pin_memory),
                     "eot": batch["eot"].to(device, non_blocking=pin_memory),
                 }
+                if "spin" in batch:
+                    target["spin"] = batch["spin"].to(device, non_blocking=pin_memory)
 
                 with torch.amp.autocast('cuda', enabled=use_amp):
                     pred = model(x)
@@ -197,24 +204,29 @@ def main():
                 val_xyz += losses.get("xyz_loss", losses.get("recon3d_loss", torch.tensor(0.0))).item() * bs
                 val_eot += losses.get("eot_loss", torch.tensor(0.0)).item() * bs
                 val_bg += losses.get("below_ground_loss", torch.tensor(0.0)).item() * bs
+                val_spin += losses.get("spin_loss", torch.tensor(0.0)).item() * bs
 
         train_loss /= max(train_samples, 1)
         train_xyz /= max(train_samples, 1)
         train_eot /= max(train_samples, 1)
         train_bg /= max(train_samples, 1)
+        train_spin /= max(train_samples, 1)
 
         val_loss /= max(val_samples, 1)
         val_xyz /= max(val_samples, 1)
         val_eot /= max(val_samples, 1)
         val_bg /= max(val_samples, 1)
+        val_spin /= max(val_samples, 1)
 
         scheduler.step(val_loss)
 
         print(
             f"[trajectory] epoch={epoch + 1} "
             f"train_loss={train_loss:.6f} val_loss={val_loss:.6f} "
-            f"train_xyz={train_xyz:.6f} train_eot={train_eot:.6f} train_bg={train_bg:.6f} "
-            f"val_xyz={val_xyz:.6f} val_eot={val_eot:.6f} val_bg={val_bg:.6f} "
+            f"train_xyz={train_xyz:.6f} train_eot={train_eot:.6f} "
+            f"train_bg={train_bg:.6f} train_spin={train_spin:.6f} "
+            f"val_xyz={val_xyz:.6f} val_eot={val_eot:.6f} "
+            f"val_bg={val_bg:.6f} val_spin={val_spin:.6f} "
             f"lr={opt.param_groups[0]['lr']:.2e}"
         )
 

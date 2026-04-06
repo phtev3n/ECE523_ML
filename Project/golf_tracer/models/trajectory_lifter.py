@@ -29,10 +29,19 @@ class TrajectoryLifter(nn.Module):
             nn.Linear(hidden_size // 2, 1),
             nn.Sigmoid(),
         )
+        # Spin head: predicts [backspin_rpm, sidespin_rpm] from mean-pooled
+        # LSTM hidden state.  Mean pooling aggregates curvature signal across
+        # all time steps rather than relying solely on the last frame.
+        self.spin_head = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_size // 2, 2),
+        )
 
     def forward(self, x: torch.Tensor) -> dict:
         x = self.pre(x)
         y, _ = self.lstm(x)
         xyz = self.xyz_head(y)
         eot = self.eot_head(y).squeeze(-1)
-        return {"xyz": xyz, "eot_prob": eot}
+        spin = self.spin_head(y.mean(dim=1))   # (B, 2)
+        return {"xyz": xyz, "eot_prob": eot, "spin": spin}

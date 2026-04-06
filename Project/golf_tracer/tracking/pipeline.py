@@ -17,6 +17,7 @@ class PipelineOutput:
     xyz_pred: np.ndarray
     uv_reprojected: np.ndarray
     visible_prob: np.ndarray
+    spin_pred: np.ndarray   # shape (2,): [backspin_rpm, sidespin_rpm] from spin_head
 
 
 class GolfBallTrackingPipeline:
@@ -119,10 +120,16 @@ class GolfBallTrackingPipeline:
         xyz = traj_pred["xyz"][0].detach().cpu().numpy()
         uv_rep = project_points(xyz, camera)
 
+        if "spin" in traj_pred:
+            spin = traj_pred["spin"][0].detach().cpu().numpy()
+        else:
+            spin = np.zeros(2, dtype=np.float32)
+
         return PipelineOutput(
             measured_uv=detector_uv,
             filtered_uv=filtered,
             xyz_pred=xyz,
             uv_reprojected=uv_rep,
             visible_prob=visible_prob,
+            spin_pred=spin,
         )

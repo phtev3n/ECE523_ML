@@ -12,6 +12,7 @@ render:
   draw_measurements: true
   draw_filtered: true
   draw_reprojected: true
+  draw_metrics: true
 tracking:
   visibility_threshold: 0.35
   # Set to false so the Kalman filter uses the visibility head to gate updates.

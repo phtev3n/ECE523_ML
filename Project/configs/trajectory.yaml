@@ -20,3 +20,4 @@ loss:
   eot_weight: 0.5
   recon3d_weight: 1.0
   below_ground_weight: 0.2
+  spin_weight: 0.5

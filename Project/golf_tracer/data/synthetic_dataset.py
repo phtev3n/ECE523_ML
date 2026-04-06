@@ -83,39 +83,67 @@ def make_background(h: int, w: int) -> np.ndarray:
     return img
 
 
-def simulate_ballistics(T: int, fps: float) -> np.ndarray:
-    """Simulate a golf ball trajectory in camera-frame coordinates.
+def simulate_ballistics(T: int, fps: float) -> tuple[np.ndarray, dict]:
+    """Simulate a golf ball trajectory in camera-frame coordinates with Magnus force.
 
     Coordinate convention (matches project() pinhole model):
       x = lateral  (horizontal in image via u = fx*x/z + cx)
       y = height   (vertical in image via v = fy*(cam_h-y)/z + cy)
       z = depth    (ball flies away from camera; z must be positive)
 
-    The ball therefore flies primarily in the +z direction with a small
-    lateral drift from side-spin.  Swapping forward/lateral was the
-    previous bug that caused the ball to exit the frame in ~6 frames.
+    Magnus force is modelled as:
+      a_magnus = K_MAGNUS * (omega × v)
+    where omega = (omega_x, omega_y, 0) and K_MAGNUS absorbs air density,
+    ball cross-section, and mass (empirically calibrated for a golf ball).
+
+    Backspin (omega_x < 0, top of ball moves rearward) produces lift (+y).
+    Sidespin (omega_y != 0) produces lateral drift (±x, draw/fade).
+
+    Returns:
+        xyz: (T, 3) float32 array of world positions
+        spin: dict with keys backspin_rpm (float) and sidespin_rpm (float)
     """
+    K_MAGNUS = 1.5e-4   # m⁻¹; empirically calibrated for a golf ball
+    G = 9.81
     dt = 1.0 / fps
+
     speed = random.uniform(45.0, 75.0)
     launch = math.radians(random.uniform(10.0, 28.0))
     side = math.radians(random.uniform(-8.0, 8.0))
-    g = 9.81
 
-    # Forward (depth) speed and vertical speed from launch angle
-    v_fwd = speed * math.cos(launch)           # ~42–70 m/s along z (away from camera)
-    vy = speed * math.sin(launch)              # ~8–35 m/s upward
-    # Lateral drift is only the side-spin component (stays small)
-    v_lat = speed * math.cos(launch) * math.sin(side)   # ±7 m/s at most
+    backspin_rpm = random.uniform(1500.0, 5000.0)
+    sidespin_rpm = random.uniform(-1000.0, 1000.0)
+
+    # Angular velocity in rad/s; omega_x < 0 for backspin (top → rear)
+    omega_x = -backspin_rpm * 2.0 * math.pi / 60.0
+    omega_y = sidespin_rpm * 2.0 * math.pi / 60.0
+
+    # Initial velocity components (same convention as original)
+    vx = speed * math.cos(launch) * math.sin(side)
+    vy = speed * math.sin(launch)
+    vz = speed * math.cos(launch) * math.cos(side)
+
+    x, y, z = 0.0, 0.2, 10.0
 
     pts = []
-    for i in range(T):
-        t = i * dt
-        x = v_lat * t                                       # lateral; near 0
-        y = max(0.0, vy * t - 0.5 * g * t * t + 0.2)      # height above ground
-        z = v_fwd * t + 10.0                                # depth; starts 10 m out
+    for _ in range(T):
         pts.append([x, y, z])
 
-    return np.asarray(pts, dtype=np.float32)
+        # Magnus acceleration: a = K * (omega × v)
+        # omega = (omega_x, omega_y, 0), so cross product simplifies to:
+        ax = K_MAGNUS * (omega_y * vz)                        # i: ωy·vz
+        ay = -G + K_MAGNUS * (-omega_x * vz)                  # j: -ωx·vz
+        az = K_MAGNUS * (omega_x * vy - omega_y * vx)         # k: ωx·vy - ωy·vx
+
+        vx += ax * dt
+        vy += ay * dt
+        vz += az * dt
+        x += vx * dt
+        y = max(0.0, y + vy * dt)
+        z += vz * dt
+
+    spin = {"backspin_rpm": float(backspin_rpm), "sidespin_rpm": float(sidespin_rpm)}
+    return np.asarray(pts, dtype=np.float32), spin
 
 
 def project(points_xyz: np.ndarray, cam: dict) -> np.ndarray:
@@ -163,7 +191,7 @@ class SyntheticGolfTrajectoryDataset(Dataset):
     def __getitem__(self, index):
         T = self.sequence_length
         camera = self._sample_camera()
-        xyz = simulate_ballistics(T, self.fps)
+        xyz, spin = simulate_ballistics(T, self.fps)
         uv = project(xyz, camera)
 
         frames = []
@@ -274,6 +302,10 @@ class SyntheticGolfTrajectoryDataset(Dataset):
             dim=1,
         )
 
+        spin_t = torch.tensor(
+            [spin["backspin_rpm"], spin["sidespin_rpm"]], dtype=torch.float32
+        )
+
         return {
             "frames": frames_t,
             "uv": uv_t,
@@ -282,6 +314,7 @@ class SyntheticGolfTrajectoryDataset(Dataset):
             "features": features,
             "eot": eot,
             "camera": camera,
+            "spin": spin_t,
         }
 
 
@@ -323,11 +356,16 @@ def export_synthetic_dataset(
                 }
             )
 
+        spin_data = {
+            "backspin_rpm": float(sample["spin"][0].item()),
+            "sidespin_rpm": float(sample["spin"][1].item()),
+        }
         with open(seq_dir / "annotations.json", "w", encoding="utf-8") as f:
             json.dump(
                 {
                     "fps": fps,
                     "camera": sample["camera"],
+                    "spin": spin_data,
                     "frames": records,
                 },
                 f,
