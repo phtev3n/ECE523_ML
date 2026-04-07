@@ -127,9 +127,10 @@ def main():
             fps_seq = float(cfg.get("render", {}).get("fps", 60.0))
             ball_metrics = compute_ball_metrics(result.xyz_pred, fps_seq)
 
-            # Spin: use model spin_head output; fall back to physics fitting.
+            # Spin: use model spin_head if its backspin prediction is physiologically
+            # plausible (> 100 rpm); otherwise fall back to physics fitting on xyz_pred.
             spin_model = result.spin_pred
-            if np.any(spin_model != 0.0):
+            if float(np.abs(spin_model[0])) > 100.0:
                 spin_display = {
                     "backspin_rpm": float(spin_model[0]),
                     "sidespin_rpm": float(spin_model[1]),

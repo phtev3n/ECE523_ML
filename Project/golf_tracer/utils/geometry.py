@@ -69,12 +69,12 @@ def compute_ball_metrics(xyz_pred: np.ndarray, fps: float) -> dict:
 
     carry = horiz0 * t_land
 
-    # Descent angle from last min(4, T-1) frames
-    n_end = min(4, len(xyz_pred) - 1)
-    v_end = (xyz_pred[-1] - xyz_pred[-1 - n_end]) / (n_end * dt)
-    vx_e, vy_e, vz_e = float(v_end[0]), float(v_end[1]), float(v_end[2])
-    horiz_e = math.sqrt(vx_e ** 2 + vz_e ** 2)
-    descent_angle = math.degrees(math.atan2(max(-vy_e, 0.0), max(horiz_e, 1e-6)))
+    # Descent angle: extrapolate to landing via energy conservation.
+    # vy at landing = -sqrt(vy0² + 2·g·y0); horizontal speed assumed constant.
+    # This is correct even when the clip ends before the ball starts descending.
+    vy_land_sq = vy0 ** 2 + 2.0 * G * y0
+    vy_land = -math.sqrt(max(vy_land_sq, 0.0))   # negative = downward
+    descent_angle = math.degrees(math.atan2(-vy_land, max(horiz0, 1e-6)))
 
     return {
         "launch_angle_deg": round(launch_angle, 1),
