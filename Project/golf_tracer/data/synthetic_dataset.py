@@ -107,11 +107,33 @@ def simulate_ballistics(T: int, fps: float) -> tuple[np.ndarray, dict]:
     G = 9.81
     dt = 1.0 / fps
 
-    speed = random.uniform(45.0, 75.0)
-    launch = math.radians(random.uniform(10.0, 28.0))
+    # Trackman-sourced ranges per club family.
+    # Sampling a club family first then drawing parameters within its range
+    # produces a realistic distribution of shot shapes and distances rather
+    # than an unrealistically uniform spread across driver and wedge extremes.
+    #   (sp_lo, sp_hi m/s,  la_lo, la_hi °,  bs_lo, bs_hi rpm)
+    #
+    # Carry targets (approximate):
+    #   Driver         235–300 yd  (215–274 m)   speed 73–83 m/s
+    #   Fairway woods  180–235 yd  (165–215 m)   speed 58–72 m/s
+    #   Long irons     170–200 yd  (155–183 m)   speed 52–62 m/s
+    #   Mid irons      150–175 yd  (137–160 m)   speed 44–54 m/s
+    #   Wedges          30–120 yd   (27–110 m)   speed 16–46 m/s
+    #     (covers lob wedge 30 yd punch shots through pitching wedge full swings)
+    CLUB_FAMILIES = [
+        (73.0, 83.0,  8.0, 14.0,  2000.0,  3500.0),   # driver
+        (58.0, 72.0, 10.0, 16.0,  3500.0,  5500.0),   # fairway woods
+        (52.0, 62.0, 13.0, 18.0,  4000.0,  6000.0),   # long irons (3–5i)
+        (44.0, 54.0, 16.0, 22.0,  5500.0,  8000.0),   # mid irons (6–8i)
+        (16.0, 46.0, 22.0, 50.0,  7000.0, 12000.0),   # wedges (LW–PW, 30–120 yd)
+    ]
+    sp_lo, sp_hi, la_lo, la_hi, bs_lo, bs_hi = random.choice(CLUB_FAMILIES)
+
+    speed = random.uniform(sp_lo, sp_hi)
+    launch = math.radians(random.uniform(la_lo, la_hi))
     side = math.radians(random.uniform(-8.0, 8.0))
 
-    backspin_rpm = random.uniform(1500.0, 5000.0)
+    backspin_rpm = random.uniform(bs_lo, bs_hi)
     sidespin_rpm = random.uniform(-1000.0, 1000.0)
 
     # Angular velocity in rad/s; omega_x < 0 for backspin (top → rear)
