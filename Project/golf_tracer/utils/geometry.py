@@ -103,15 +103,21 @@ def estimate_spin_from_trajectory(xyz_pred: np.ndarray, fps: float) -> dict:
     except ImportError as exc:
         raise ImportError("scipy is required for spin estimation: pip install scipy") from exc
 
-    if len(xyz_pred) < 6:
-        return {"backspin_rpm": 0.0, "sidespin_rpm": 0.0}
+    # Magnus curvature over the observed window must exceed the expected
+    # measurement noise level to be detectable.  At 60 fps the cumulative
+    # lateral/vertical deflection from spin is:
+    #   Δ ≈ K_MAGNUS * ω * v * t² / 2  ≈ 1.5e-4 * 300 * 60 * t² / 2
+    # For t = 24/60 ≈ 0.4 s this is only ~0.05 m — well below a typical
+    # rmse_3d of ~1 m.  Require at least 1.5 s of flight (90 frames at 60 fps).
+    min_frames = int(round(1.5 * fps))
+    if len(xyz_pred) < max(6, min_frames):
+        return None
 
     K_MAGNUS = 1.5e-4
     G = 9.81
     dt = 1.0 / fps
     T = len(xyz_pred)
 
-    # Estimate initial state from first few frames
     n0 = min(4, T - 1)
     v0 = (xyz_pred[n0] - xyz_pred[0]) / (n0 * dt)
     p0 = xyz_pred[0].copy()
@@ -139,16 +145,45 @@ def estimate_spin_from_trajectory(xyz_pred: np.ndarray, fps: float) -> dict:
         sim = _simulate(float(params[0]), float(params[1]))
         return float(np.mean((sim - xyz_pred) ** 2))
 
-    result = minimize(
-        _objective,
-        x0=np.array([2500.0, 0.0]),
-        method="L-BFGS-B",
-        bounds=[(0.0, 8000.0), (-3000.0, 3000.0)],
-        options={"maxiter": 300, "ftol": 1e-4},
-    )
+    bounds = [(0.0, 8000.0), (-3000.0, 3000.0)]
 
-    backspin = float(np.clip(result.x[0], 0.0, 8000.0))
-    sidespin = float(np.clip(result.x[1], -3000.0, 3000.0))
+    # Random restarts: sample diverse starting points and keep the best.
+    # The objective is near-flat for short clips, so a single fixed x0 gets
+    # stuck at the initial guess.  Multiple restarts explore the parameter
+    # space and reduce the risk of reporting the seed as the answer.
+    rng = np.random.default_rng(seed=42)
+    candidates = [
+        np.array([2500.0, 0.0]),       # nominal prior
+        np.array([1500.0, 500.0]),
+        np.array([4000.0, -500.0]),
+        np.array([3000.0, 1000.0]),
+        np.array([1500.0, -800.0]),
+    ]
+    # Add a few random draws
+    for _ in range(5):
+        candidates.append(
+            np.array([
+                rng.uniform(500.0, 7000.0),
+                rng.uniform(-2500.0, 2500.0),
+            ])
+        )
+
+    best_result = None
+    best_fun = float("inf")
+    for x0 in candidates:
+        res = minimize(
+            _objective,
+            x0=x0,
+            method="L-BFGS-B",
+            bounds=bounds,
+            options={"maxiter": 400, "ftol": 1e-6},
+        )
+        if res.fun < best_fun:
+            best_fun = res.fun
+            best_result = res
+
+    backspin = float(np.clip(best_result.x[0], 0.0, 8000.0))
+    sidespin = float(np.clip(best_result.x[1], -3000.0, 3000.0))
     return {
         "backspin_rpm": round(backspin),
         "sidespin_rpm": round(sidespin),
