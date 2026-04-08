@@ -2,6 +2,19 @@
 data/
 !Project/golf_tracer/data/
 .claude/
+
+# Model checkpoints — too large for GitHub (100MB limit)
+*.pt
+*.pth
+Project/outputs/
+!Project/outputs/.gitkeep
+
+# Demo/real dataset frames (regenerate with make_demo_data.py)
+Project/demo_dataset/
+Project/real_dataset/
+
+# Slurm logs
+*.out
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
