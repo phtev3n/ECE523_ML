@@ -4,4 +4,4 @@ torch
 tqdm
 PyYAML
 matplotlib
-torchvision
+scipy

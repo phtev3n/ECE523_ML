@@ -8,9 +8,10 @@ def project_points(points_xyz: np.ndarray, camera: dict) -> np.ndarray:
     fy = float(camera["fy"])
     cx = float(camera["cx"])
     cy = float(camera["cy"])
+    camera_height = float(camera.get("camera_height_m", 0.0))
     z = np.clip(points_xyz[:, 2], 1e-3, None)
     u = fx * points_xyz[:, 0] / z + cx
-    v = fy * points_xyz[:, 1] / z + cy
+    v = fy * (camera_height - points_xyz[:, 1]) / z + cy
     return np.stack([u, v], axis=1)
 
 
