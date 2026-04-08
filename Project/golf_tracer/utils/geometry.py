@@ -69,6 +69,15 @@ def compute_ball_metrics(xyz_pred: np.ndarray, fps: float) -> dict:
 
     carry = horiz0 * t_land
 
+    # Apex: solve for t when vy = 0 → t_apex = vy0 / g, then substitute.
+    # Using initial conditions avoids the "clip ends before apex" problem where
+    # max(xyz_pred[:,1]) would only report the height at the last observed frame.
+    # Note: backspin lift will raise the true apex above this ballistic estimate;
+    # the spin-corrected value can be computed once spin estimation is available
+    # from longer clips.
+    t_apex = vy0 / G if vy0 > 0 else 0.0
+    apex = y0 + vy0 * t_apex - 0.5 * G * t_apex ** 2
+
     # Descent angle: extrapolate to landing via energy conservation.
     # vy at landing = -sqrt(vy0² + 2·g·y0); horizontal speed assumed constant.
     # This is correct even when the clip ends before the ball starts descending.
@@ -81,7 +90,7 @@ def compute_ball_metrics(xyz_pred: np.ndarray, fps: float) -> dict:
         "launch_direction_deg": round(launch_direction, 1),
         "ball_speed_ms": round(speed, 1),
         "carry_m": round(carry, 1),
-        "apex_m": round(apex_height(xyz_pred), 2),
+        "apex_m": round(apex, 2),
         "descent_angle_deg": round(descent_angle, 1),
         "time_of_flight_s": round(t_land, 2),
     }
