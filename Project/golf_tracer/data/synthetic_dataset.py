@@ -1,3 +1,30 @@
+"""Synthetic golf ball dataset for training the detector and trajectory models.
+
+Everything here is procedurally generated — no real video is required.  The
+synthetic data is designed to be diverse enough that models trained on it
+transfer to real footage without catastrophic failure, acting as a strong
+pre-training baseline before fine-tuning on real sequences.
+
+Key generation choices
+----------------------
+Backgrounds: randomised sky colour, horizon position, grass shade, mowing
+  stripe pattern, tree silhouettes, and bunker patches.  This variety prevents
+  the detector from over-fitting to a single background type.
+
+Ball rendering: radius scales inversely with depth (z) so far-away balls
+  appear smaller.  Occasional Gaussian blur simulates motion blur at high speed.
+
+Ballistics: Magnus-force numerical integration with club-family-specific
+  parameter ranges (Trackman-sourced).  Each sequence independently samples
+  its club family, speed, launch angle, sidespin, and backspin.
+
+Camera intrinsics: randomised per sequence (focal length ±40 %, principal
+  point ±6 %, camera height 0.8–2.0 m) so the trajectory model learns a
+  camera-invariant representation rather than memorising a fixed projection.
+
+Visibility: random per-sequence dropout rate (3–15 %) plus out-of-frame
+  clipping.  Frames where the ball is outside image bounds are always invisible.
+"""
 from __future__ import annotations
 
 import json
@@ -12,6 +39,13 @@ from torch.utils.data import Dataset
 
 
 def gaussian_2d(h: int, w: int, cx: float, cy: float, sigma: float) -> np.ndarray:
+    """Generate a 2D Gaussian blob centred at (cx, cy) as the heatmap target.
+
+    Using a soft Gaussian target (rather than a hard 1-at-peak label) gives
+    the heatmap loss spatial smoothness: nearby cells receive partial credit,
+    which encourages the network to produce peaked, well-localised responses
+    rather than sparse single-pixel activations.
+    """
     yy, xx = np.mgrid[0:h, 0:w]
     g = np.exp(-((xx - cx) ** 2 + (yy - cy) ** 2) / (2 * sigma * sigma))
     return g.astype(np.float32)
@@ -314,6 +348,13 @@ class SyntheticGolfTrajectoryDataset(Dataset):
             uv_feat = uv_t
             vis_feat = visible_t
 
+        # Feature vector layout (T, 5):
+        #   col 0–1 : (u, v) pixel position (possibly noise-corrupted)
+        #   col 2   : visibility probability (possibly noise-corrupted)
+        #   col 3   : zeros placeholder for log-variance uncertainty
+        #             (filled by the real detector at inference; zero here
+        #              because the synthetic generator has no uncertainty model)
+        #   col 4   : normalised frame index 0→1 (trajectory phase encoding)
         features = torch.cat(
             [
                 uv_feat,

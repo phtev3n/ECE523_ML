@@ -1,3 +1,38 @@
+"""Evaluate the full end-to-end golf ball tracking pipeline on a dataset.
+
+Runs the complete GolfBallTrackingPipeline (detector → Kalman filter →
+TrajectoryLifter) on every sequence in the dataset and reports:
+  - 2D tracking metrics (RMSE, visibility F1, smoothness)
+  - 3D reconstruction metrics (RMSE, carry error, apex error)
+  - Ball flight metrics (launch angle, carry, apex, descent, ToF)
+  - Spin estimation (model spin_head or physics-fitting fallback)
+
+Output files per sequence (in --out_dir):
+  seq_XXXX_predictions.json  — all predictions + metrics for that sequence
+  seq_XXXX_overlay.mp4       — tracer + HUD overlay video (if --save_video)
+
+Summary output:
+  metrics.csv   — per-sequence metric table
+  summary.json  — mean of each metric across all sequences
+
+Spin estimation strategy
+------------------------
+The model's spin_head output is used when its backspin magnitude exceeds
+100 rpm (i.e. a physically plausible shot).  Near-zero values indicate the
+LSTM lacked sufficient clip length to observe Magnus curvature, so the
+physics-fitting fallback (estimate_spin_from_trajectory) is invoked instead.
+That fallback requires clips ≥ 90 frames (1.5 s at 60 fps); for shorter clips
+both estimators report 0 and spin rows are omitted from the HUD.
+
+Usage
+-----
+python scripts/test_pipeline.py \\
+    --config configs/pipeline.yaml \\
+    --dataset_root demo_dataset \\
+    --detector_ckpt outputs/detector_best.pt \\
+    --trajectory_ckpt outputs/trajectory_best.pt \\
+    --save_video
+"""
 from __future__ import annotations
 
 import sys

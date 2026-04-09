@@ -1,3 +1,28 @@
+"""Train the TrajectoryLifter LSTM on either synthetic or real data.
+
+The TrajectoryLifter takes a sequence of (u, v, visibility, uncertainty,
+time_index) feature vectors produced by the Kalman-filtered detector outputs
+and predicts the full 3D trajectory (x, y, z) per frame, an end-of-trajectory
+probability, and a sequence-level spin estimate.
+
+Key design decisions
+---------------------
+Detector noise injection: During training, Gaussian noise is added to the UV
+  inputs (std = detector_noise_std pixels) to simulate the errors the detector
+  will produce at inference.  Without this, the LSTM overfits to perfect 2D
+  inputs and degrades significantly when used with noisy detections.
+
+Spin supervision: Active only when ground-truth spin labels are available
+  (i.e. synthetic data with Magnus-force simulation).  Real data batches that
+  lack a 'spin' key are handled gracefully — the spin loss term is zero and
+  no gradient flows through the spin head for those batches.
+
+Usage
+-----
+python scripts/train_trajectory.py --config configs/trajectory.yaml
+python scripts/train_trajectory.py --config configs/trajectory.yaml \\
+    --dataset_root real_dataset/
+"""
 from __future__ import annotations
 
 import sys

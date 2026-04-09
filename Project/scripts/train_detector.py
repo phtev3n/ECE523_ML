@@ -1,3 +1,23 @@
+"""Train the MultiScaleBallDetector on either synthetic or real data.
+
+The detector is a single-frame model: it takes one RGB image and predicts a
+heatmap (ball location), a sub-pixel offset, a visibility logit, and an
+uncertainty map.  It is trained independently from the TrajectoryLifter so
+that each component can be improved in isolation.
+
+Training operates in two modes:
+  Synthetic (default) : SyntheticGolfTrajectoryDataset generates random
+      backgrounds and ballistic trajectories on the fly.  The dataset is
+      effectively infinite but does not capture real-world appearance variation.
+  Real (--dataset_root): RealGolfSequenceDataset loads pre-processed
+      sequences from the real_dataset directory built by build_dataset.py.
+
+Usage
+-----
+python scripts/train_detector.py --config configs/detector.yaml
+python scripts/train_detector.py --config configs/detector.yaml \\
+    --dataset_root real_dataset/
+"""
 from __future__ import annotations
 
 import sys
@@ -21,6 +41,13 @@ from golf_tracer.utils.train import resolve_device, set_seed
 
 
 def freeze_batchnorm(module: torch.nn.Module) -> None:
+    """Set all BatchNorm layers to eval mode and freeze their parameters.
+
+    Frozen BatchNorm is recommended when fine-tuning a pretrained ResNet
+    backbone on a small dataset.  The ImageNet statistics in the BN layers
+    are more reliable than what would be estimated from a golf-ball dataset,
+    so keeping them fixed prevents the running mean/variance from drifting.
+    """
     if isinstance(module, torch.nn.modules.batchnorm._BatchNorm):
         module.eval()
         for p in module.parameters():

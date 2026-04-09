@@ -1,3 +1,23 @@
+"""Dataset loader for real (or exported synthetic) golf sequences.
+
+Each sequence lives in a directory with the layout:
+    seq_XXXX/
+        frames/
+            000000.png
+            000001.png
+            ...
+        annotations.json
+
+annotations.json contains the pinhole camera intrinsics, per-frame 2D
+positions (uv), 3D positions (xyz), and visibility flags.  When xyz is not
+available (2D-only mode built by build_dataset.py --mode_2d_only) it is
+filled with zeros — the trajectory model will still produce xyz predictions
+but the recon3d_loss will be invalid and should not be used for evaluation.
+
+This dataset supports both 'detector' mode (single-frame, returns one image
+and its annotations) and 'trajectory' mode (full sequence, returns all frames
+and the complete feature tensor for the LSTM).
+"""
 from __future__ import annotations
 
 from pathlib import Path
