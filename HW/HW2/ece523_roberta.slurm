@@ -21,10 +21,13 @@ python --version
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 pwd
 
-# Install any missing dependencies
-python -m pip install -q datasets jupyter nbconvert
+# Install lightweight notebook runner (no pyarrow/datasets dependency chain)
+python -m pip install -q papermill
 
 # Run the notebook in-place (executes all cells, saves outputs into the .ipynb)
-python -m jupyter nbconvert --to notebook --execute hw2_roberta.ipynb --output hw2_roberta.ipynb --ExecutePreprocessor.timeout=1800
+python -m papermill hw2_roberta.ipynb hw2_roberta.ipynb --no-progress-bar
+
+# Clean up model checkpoints to save disk space
+rm -rf ./roberta_syllogism
 
 echo "Job finished: $(date)"
