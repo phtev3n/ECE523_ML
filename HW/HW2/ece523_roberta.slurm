@@ -21,11 +21,15 @@ python --version
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 pwd
 
-# Install lightweight notebook runner (no pyarrow/datasets dependency chain)
-python -m pip install -q papermill
+# Install lightweight notebook runner and register pyenv as a Jupyter kernel
+python -m pip install -q papermill ipykernel
+python -m ipykernel install --user --name pyenv --display-name "Python (pyenv)"
 
-# Run the notebook in-place (executes all cells, saves outputs into the .ipynb)
-python -m papermill hw2_roberta.ipynb hw2_roberta.ipynb --no-progress-bar
+# Verify transformers is visible to the kernel
+python -c "import transformers; print(f'transformers {transformers.__version__} OK')"
+
+# Run the notebook using the pyenv kernel (system python3 kernel lacks transformers)
+python -m papermill hw2_roberta.ipynb hw2_roberta.ipynb --no-progress-bar -k pyenv
 
 # Clean up model checkpoints to save disk space
 rm -rf ./roberta_syllogism
