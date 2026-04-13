@@ -21,12 +21,14 @@ python --version
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 pwd
 
-# Install lightweight notebook runner and register pyenv as a Jupyter kernel
-python -m pip install -q papermill ipykernel
+# Install dependencies into the active Python environment
+python -m pip install -q transformers accelerate papermill ipykernel
+
+# Register this Python as a Jupyter kernel so papermill uses it
 python -m ipykernel install --user --name pyenv --display-name "Python (pyenv)"
 
-# Verify transformers is visible to the kernel
-python -c "import transformers; print(f'transformers {transformers.__version__} OK')"
+# Verify key imports before running the notebook
+python -c "import torch; import transformers; import sklearn; print(f'torch={torch.__version__}, transformers={transformers.__version__}, GPU={torch.cuda.is_available()}')"
 
 # Run the notebook using the pyenv kernel (system python3 kernel lacks transformers)
 python -m papermill hw2_roberta.ipynb hw2_roberta.ipynb --no-progress-bar -k pyenv
