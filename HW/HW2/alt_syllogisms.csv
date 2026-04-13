@@ -1,0 +1,2305 @@
+,Id,Type,Mode,Text,Valid,Result
+0,1,aaa,1,"All flowers are plants. 
+All roses are flowers. 
+Therefore, all roses are plants. ",Yes,1
+1,2,aaa,1,"All mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",Yes,1
+2,3,aaa,1,"All people are mortals. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",Yes,1
+3,4,aae,1,"All flowers are plants. 
+All roses are flowers. 
+Therefore, no roses are plants. ",No,0
+4,5,aae,1,"All mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+5,6,aae,1,"All people are mortals. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+6,7,aai,1,"All flowers are plants. 
+All roses are flowers. 
+Therefore, some roses are plants. ",Yes,1
+7,8,aai,1,"All mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",Yes,1
+8,9,aai,1,"All people are mortals. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",Yes,1
+9,10,aao,1,"All flowers are plants. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+10,11,aao,1,"All mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+11,12,aao,1,"All people are mortals. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+12,13,aea,1,"All flowers are plants. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+13,14,aea,1,"All mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+14,15,aea,1,"All people are mortals. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+15,16,aee,1,"All flowers are plants. 
+No roses are flowers. 
+Therefore, no roses are plants. ",No,0
+16,17,aee,1,"All mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+17,18,aee,1,"All people are mortals. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+18,19,aei,1,"All flowers are plants. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+19,20,aei,1,"All mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+20,21,aei,1,"All people are mortals. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+21,22,aeo,1,"All flowers are plants. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+22,23,aeo,1,"All mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+23,24,aeo,1,"All people are mortals. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+24,25,aia,1,"All flowers are plants. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+25,26,aia,1,"All mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+26,27,aia,1,"All people are mortals. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+27,28,aie,1,"All flowers are plants. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+28,29,aie,1,"All mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+29,30,aie,1,"All people are mortals. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+30,31,aii,1,"All flowers are plants. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",Yes,1
+31,32,aii,1,"All mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",Yes,1
+32,33,aii,1,"All people are mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",Yes,1
+33,34,aio,1,"All flowers are plants. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+34,35,aio,1,"All mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+35,36,aio,1,"All people are mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+36,37,aoa,1,"All flowers are plants. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+37,38,aoa,1,"All mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+38,39,aoa,1,"All people are mortals. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+39,40,aoe,1,"All flowers are plants. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+40,41,aoe,1,"All mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+41,42,aoe,1,"All people are mortals. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+42,43,aoi,1,"All flowers are plants. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+43,44,aoi,1,"All mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+44,45,aoi,1,"All people are mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+45,46,aoo,1,"All flowers are plants. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",No,0
+46,47,aoo,1,"All mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+47,48,aoo,1,"All people are mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",No,0
+48,49,eaa,1,"No flowers are plants. 
+All roses are flowers. 
+Therefore, all roses are plants. ",No,0
+49,50,eaa,1,"No mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+50,51,eaa,1,"No people are mortals. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+51,52,eae,1,"No flowers are plants. 
+All roses are flowers. 
+Therefore, no roses are plants. ",Yes,1
+52,53,eae,1,"No mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",Yes,1
+53,54,eae,1,"No people are mortals. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",Yes,1
+54,55,eai,1,"No flowers are plants. 
+All roses are flowers. 
+Therefore, some roses are plants. ",No,0
+55,56,eai,1,"No mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+56,57,eai,1,"No people are mortals. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+57,58,eao,1,"No flowers are plants. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",Yes,1
+58,59,eao,1,"No mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+59,60,eao,1,"No people are mortals. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",Yes,1
+60,61,eea,1,"No flowers are plants. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+61,62,eea,1,"No mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+62,63,eea,1,"No people are mortals. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+63,64,eee,1,"No flowers are plants. 
+No roses are flowers. 
+Therefore, no roses are plants. ",No,0
+64,65,eee,1,"No mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+65,66,eee,1,"No people are mortals. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+66,67,eei,1,"No flowers are plants. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+67,68,eei,1,"No mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+68,69,eei,1,"No people are mortals. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+69,70,eeo,1,"No flowers are plants. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+70,71,eeo,1,"No mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+71,72,eeo,1,"No people are mortals. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+72,73,eia,1,"No flowers are plants. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+73,74,eia,1,"No mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+74,75,eia,1,"No people are mortals. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+75,76,eie,1,"No flowers are plants. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+76,77,eie,1,"No mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+77,78,eie,1,"No people are mortals. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+78,79,eii,1,"No flowers are plants. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",No,0
+79,80,eii,1,"No mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+80,81,eii,1,"No people are mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+81,82,eio,1,"No flowers are plants. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",Yes,1
+82,83,eio,1,"No mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+83,84,eio,1,"No people are mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",Yes,1
+84,85,eoa,1,"No flowers are plants. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+85,86,eoa,1,"No mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+86,87,eoa,1,"No people are mortals. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+87,88,eoe,1,"No flowers are plants. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+88,89,eoe,1,"No mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+89,90,eoe,1,"No people are mortals. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+90,91,eoi,1,"No flowers are plants. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+91,92,eoi,1,"No mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+92,93,eoi,1,"No people are mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+93,94,eoo,1,"No flowers are plants. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",No,0
+94,95,eoo,1,"No mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+95,96,eoo,1,"No people are mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",No,0
+96,97,iaa,1,"Some flowers are plants. 
+All roses are flowers. 
+Therefore, all roses are plants. ",No,0
+97,98,iaa,1,"Some mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+98,99,iaa,1,"Some people are mortals. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+99,100,iae,1,"Some flowers are plants. 
+All roses are flowers. 
+Therefore, no roses are plants. ",No,0
+100,101,iae,1,"Some mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+101,102,iae,1,"Some people are mortals. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+102,103,iai,1,"Some flowers are plants. 
+All roses are flowers. 
+Therefore, some roses are plants. ",No,0
+103,104,iai,1,"Some mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+104,105,iai,1,"Some people are mortals. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+105,106,iao,1,"Some flowers are plants. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+106,107,iao,1,"Some mammals are warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+107,108,iao,1,"Some people are mortals. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+108,109,iea,1,"Some flowers are plants. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+109,110,iea,1,"Some mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+110,111,iea,1,"Some people are mortals. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+111,112,iee,1,"Some flowers are plants. 
+No roses are flowers. 
+Therefore, no roses are plants. ",No,0
+112,113,iee,1,"Some mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+113,114,iee,1,"Some people are mortals. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+114,115,iei,1,"Some flowers are plants. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+115,116,iei,1,"Some mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+116,117,iei,1,"Some people are mortals. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+117,118,ieo,1,"Some flowers are plants. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+118,119,ieo,1,"Some mammals are warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+119,120,ieo,1,"Some people are mortals. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+120,121,iia,1,"Some flowers are plants. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+121,122,iia,1,"Some mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+122,123,iia,1,"Some people are mortals. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+123,124,iie,1,"Some flowers are plants. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+124,125,iie,1,"Some mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+125,126,iie,1,"Some people are mortals. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+126,127,iii,1,"Some flowers are plants. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",No,0
+127,128,iii,1,"Some mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+128,129,iii,1,"Some people are mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+129,130,iio,1,"Some flowers are plants. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+130,131,iio,1,"Some mammals are warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+131,132,iio,1,"Some people are mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+132,133,ioa,1,"Some flowers are plants. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+133,134,ioa,1,"Some mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+134,135,ioa,1,"Some people are mortals. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+135,136,ioe,1,"Some flowers are plants. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+136,137,ioe,1,"Some mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+137,138,ioe,1,"Some people are mortals. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+138,139,ioi,1,"Some flowers are plants. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+139,140,ioi,1,"Some mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+140,141,ioi,1,"Some people are mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+141,142,ioo,1,"Some flowers are plants. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",No,0
+142,143,ioo,1,"Some mammals are warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+143,144,ioo,1,"Some people are mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",No,0
+144,145,oaa,1,"Some flowers are not plants. 
+All roses are flowers. 
+Therefore, all roses are plants. ",No,0
+145,146,oaa,1,"Some mammals are not warm-blooded animals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+146,147,oaa,1,"Some people are not mortals. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+147,148,oae,1,"Some flowers are not plants. 
+All roses are flowers. 
+Therefore, no roses are plants. ",No,0
+148,149,oae,1,"Some mammals are not warm-blooded animals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+149,150,oae,1,"Some people are not mortals. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+150,151,oai,1,"Some flowers are not plants. 
+All roses are flowers. 
+Therefore, some roses are plants. ",No,0
+151,152,oai,1,"Some mammals are not warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+152,153,oai,1,"Some people are not mortals. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+153,154,oao,1,"Some flowers are not plants. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+154,155,oao,1,"Some mammals are not warm-blooded animals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+155,156,oao,1,"Some people are not mortals. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+156,157,oea,1,"Some flowers are not plants. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+157,158,oea,1,"Some mammals are not warm-blooded animals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+158,159,oea,1,"Some people are not mortals. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+159,160,oee,1,"Some flowers are not plants. 
+No roses are flowers. 
+Therefore, no roses are plants. ",No,0
+160,161,oee,1,"Some mammals are not warm-blooded animals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+161,162,oee,1,"Some people are not mortals. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+162,163,oei,1,"Some flowers are not plants. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+163,164,oei,1,"Some mammals are not warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+164,165,oei,1,"Some people are not mortals. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+165,166,oeo,1,"Some flowers are not plants. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+166,167,oeo,1,"Some mammals are not warm-blooded animals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+167,168,oeo,1,"Some people are not mortals. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+168,169,oia,1,"Some flowers are not plants. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+169,170,oia,1,"Some mammals are not warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+170,171,oia,1,"Some people are not mortals. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+171,172,oie,1,"Some flowers are not plants. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+172,173,oie,1,"Some mammals are not warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+173,174,oie,1,"Some people are not mortals. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+174,175,oii,1,"Some flowers are not plants. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",No,0
+175,176,oii,1,"Some mammals are not warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+176,177,oii,1,"Some people are not mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+177,178,oio,1,"Some flowers are not plants. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+178,179,oio,1,"Some mammals are not warm-blooded animals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+179,180,oio,1,"Some people are not mortals. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+180,181,ooa,1,"Some flowers are not plants. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+181,182,ooa,1,"Some mammals are not warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+182,183,ooa,1,"Some people are not mortals. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+183,184,ooe,1,"Some flowers are not plants. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+184,185,ooe,1,"Some mammals are not warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+185,186,ooe,1,"Some people are not mortals. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+186,187,ooi,1,"Some flowers are not plants. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+187,188,ooi,1,"Some mammals are not warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+188,189,ooi,1,"Some people are not mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+189,190,ooo,1,"Some flowers are not plants. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",No,0
+190,191,ooo,1,"Some mammals are not warm-blooded animals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+191,192,ooo,1,"Some people are not mortals. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",No,0
+192,193,aaa,2,"All plants are flowers. 
+All roses are flowers. 
+Therefore, all roses are plants. ",No,0
+193,194,aaa,2,"All warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+194,195,aaa,2,"All mortals are people. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+195,196,aae,2,"All plants are flowers. 
+All roses are flowers. 
+Therefore, no roses are plants. ",No,0
+196,197,aae,2,"All warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+197,198,aae,2,"All mortals are people. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+198,199,aai,2,"All plants are flowers. 
+All roses are flowers. 
+Therefore, some roses are plants. ",No,0
+199,200,aai,2,"All warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+200,201,aai,2,"All mortals are people. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+201,202,aao,2,"All plants are flowers. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+202,203,aao,2,"All warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+203,204,aao,2,"All mortals are people. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+204,205,aea,2,"All plants are flowers. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+205,206,aea,2,"All warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+206,207,aea,2,"All mortals are people. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+207,208,aee,2,"All plants are flowers. 
+No roses are flowers. 
+Therefore, no roses are plants. ",Yes,1
+208,209,aee,2,"All warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",Yes,1
+209,210,aee,2,"All mortals are people. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",Yes,1
+210,211,aei,2,"All plants are flowers. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+211,212,aei,2,"All warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+212,213,aei,2,"All mortals are people. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+213,214,aeo,2,"All plants are flowers. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",Yes,1
+214,215,aeo,2,"All warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+215,216,aeo,2,"All mortals are people. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",Yes,1
+216,217,aia,2,"All plants are flowers. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+217,218,aia,2,"All warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+218,219,aia,2,"All mortals are people. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+219,220,aie,2,"All plants are flowers. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+220,221,aie,2,"All warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+221,222,aie,2,"All mortals are people. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+222,223,aii,2,"All plants are flowers. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",No,0
+223,224,aii,2,"All warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+224,225,aii,2,"All mortals are people. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+225,226,aio,2,"All plants are flowers. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+226,227,aio,2,"All warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+227,228,aio,2,"All mortals are people. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+228,229,aoa,2,"All plants are flowers. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+229,230,aoa,2,"All warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+230,231,aoa,2,"All mortals are people. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+231,232,aoe,2,"All plants are flowers. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+232,233,aoe,2,"All warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+233,234,aoe,2,"All mortals are people. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+234,235,aoi,2,"All plants are flowers. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+235,236,aoi,2,"All warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+236,237,aoi,2,"All mortals are people. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+237,238,aoo,2,"All plants are flowers. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",Yes,1
+238,239,aoo,2,"All warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+239,240,aoo,2,"All mortals are people. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",Yes,1
+240,241,eaa,2,"No plants are flowers. 
+All roses are flowers. 
+Therefore, all roses are plants. ",No,0
+241,242,eaa,2,"No warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+242,243,eaa,2,"No mortals are people. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+243,244,eae,2,"No plants are flowers. 
+All roses are flowers. 
+Therefore, no roses are plants. ",Yes,1
+244,245,eae,2,"No warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",Yes,1
+245,246,eae,2,"No mortals are people. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",Yes,1
+246,247,eai,2,"No plants are flowers. 
+All roses are flowers. 
+Therefore, some roses are plants. ",No,0
+247,248,eai,2,"No warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+248,249,eai,2,"No mortals are people. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+249,250,eao,2,"No plants are flowers. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",Yes,1
+250,251,eao,2,"No warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+251,252,eao,2,"No mortals are people. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",Yes,1
+252,253,eea,2,"No plants are flowers. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+253,254,eea,2,"No warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+254,255,eea,2,"No mortals are people. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+255,256,eee,2,"No plants are flowers. 
+No roses are flowers. 
+Therefore, no roses are plants. ",No,0
+256,257,eee,2,"No warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+257,258,eee,2,"No mortals are people. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+258,259,eei,2,"No plants are flowers. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+259,260,eei,2,"No warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+260,261,eei,2,"No mortals are people. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+261,262,eeo,2,"No plants are flowers. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+262,263,eeo,2,"No warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+263,264,eeo,2,"No mortals are people. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+264,265,eia,2,"No plants are flowers. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+265,266,eia,2,"No warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+266,267,eia,2,"No mortals are people. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+267,268,eie,2,"No plants are flowers. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+268,269,eie,2,"No warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+269,270,eie,2,"No mortals are people. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+270,271,eii,2,"No plants are flowers. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",No,0
+271,272,eii,2,"No warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+272,273,eii,2,"No mortals are people. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+273,274,eio,2,"No plants are flowers. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",Yes,1
+274,275,eio,2,"No warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+275,276,eio,2,"No mortals are people. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",Yes,1
+276,277,eoa,2,"No plants are flowers. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+277,278,eoa,2,"No warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+278,279,eoa,2,"No mortals are people. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+279,280,eoe,2,"No plants are flowers. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+280,281,eoe,2,"No warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+281,282,eoe,2,"No mortals are people. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+282,283,eoi,2,"No plants are flowers. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+283,284,eoi,2,"No warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+284,285,eoi,2,"No mortals are people. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+285,286,eoo,2,"No plants are flowers. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",No,0
+286,287,eoo,2,"No warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+287,288,eoo,2,"No mortals are people. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",No,0
+288,289,iaa,2,"Some plants are flowers. 
+All roses are flowers. 
+Therefore, all roses are plants. ",No,0
+289,290,iaa,2,"Some warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+290,291,iaa,2,"Some mortals are people. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+291,292,iae,2,"Some plants are flowers. 
+All roses are flowers. 
+Therefore, no roses are plants. ",No,0
+292,293,iae,2,"Some warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+293,294,iae,2,"Some mortals are people. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+294,295,iai,2,"Some plants are flowers. 
+All roses are flowers. 
+Therefore, some roses are plants. ",No,0
+295,296,iai,2,"Some warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+296,297,iai,2,"Some mortals are people. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+297,298,iao,2,"Some plants are flowers. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+298,299,iao,2,"Some warm-blooded animals are mammals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+299,300,iao,2,"Some mortals are people. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+300,301,iea,2,"Some plants are flowers. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+301,302,iea,2,"Some warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+302,303,iea,2,"Some mortals are people. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+303,304,iee,2,"Some plants are flowers. 
+No roses are flowers. 
+Therefore, no roses are plants. ",No,0
+304,305,iee,2,"Some warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+305,306,iee,2,"Some mortals are people. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+306,307,iei,2,"Some plants are flowers. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+307,308,iei,2,"Some warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+308,309,iei,2,"Some mortals are people. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+309,310,ieo,2,"Some plants are flowers. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+310,311,ieo,2,"Some warm-blooded animals are mammals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+311,312,ieo,2,"Some mortals are people. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+312,313,iia,2,"Some plants are flowers. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+313,314,iia,2,"Some warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+314,315,iia,2,"Some mortals are people. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+315,316,iie,2,"Some plants are flowers. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+316,317,iie,2,"Some warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+317,318,iie,2,"Some mortals are people. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+318,319,iii,2,"Some plants are flowers. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",No,0
+319,320,iii,2,"Some warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+320,321,iii,2,"Some mortals are people. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+321,322,iio,2,"Some plants are flowers. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+322,323,iio,2,"Some warm-blooded animals are mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+323,324,iio,2,"Some mortals are people. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+324,325,ioa,2,"Some plants are flowers. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+325,326,ioa,2,"Some warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+326,327,ioa,2,"Some mortals are people. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+327,328,ioe,2,"Some plants are flowers. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+328,329,ioe,2,"Some warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+329,330,ioe,2,"Some mortals are people. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+330,331,ioi,2,"Some plants are flowers. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+331,332,ioi,2,"Some warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+332,333,ioi,2,"Some mortals are people. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+333,334,ioo,2,"Some plants are flowers. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",No,0
+334,335,ioo,2,"Some warm-blooded animals are mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+335,336,ioo,2,"Some mortals are people. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",No,0
+336,337,oaa,2,"Some plants are not flowers. 
+All roses are flowers. 
+Therefore, all roses are plants. ",No,0
+337,338,oaa,2,"Some warm-blooded animals are not mammals. 
+All dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+338,339,oaa,2,"Some mortals are not people. 
+All Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+339,340,oae,2,"Some plants are not flowers. 
+All roses are flowers. 
+Therefore, no roses are plants. ",No,0
+340,341,oae,2,"Some warm-blooded animals are not mammals. 
+All dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+341,342,oae,2,"Some mortals are not people. 
+All Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+342,343,oai,2,"Some plants are not flowers. 
+All roses are flowers. 
+Therefore, some roses are plants. ",No,0
+343,344,oai,2,"Some warm-blooded animals are not mammals. 
+All dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+344,345,oai,2,"Some mortals are not people. 
+All Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+345,346,oao,2,"Some plants are not flowers. 
+All roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+346,347,oao,2,"Some warm-blooded animals are not mammals. 
+All dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+347,348,oao,2,"Some mortals are not people. 
+All Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+348,349,oea,2,"Some plants are not flowers. 
+No roses are flowers. 
+Therefore, all roses are plants. ",No,0
+349,350,oea,2,"Some warm-blooded animals are not mammals. 
+No dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+350,351,oea,2,"Some mortals are not people. 
+No Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+351,352,oee,2,"Some plants are not flowers. 
+No roses are flowers. 
+Therefore, no roses are plants. ",No,0
+352,353,oee,2,"Some warm-blooded animals are not mammals. 
+No dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+353,354,oee,2,"Some mortals are not people. 
+No Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+354,355,oei,2,"Some plants are not flowers. 
+No roses are flowers. 
+Therefore, some roses are plants. ",No,0
+355,356,oei,2,"Some warm-blooded animals are not mammals. 
+No dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+356,357,oei,2,"Some mortals are not people. 
+No Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+357,358,oeo,2,"Some plants are not flowers. 
+No roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+358,359,oeo,2,"Some warm-blooded animals are not mammals. 
+No dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+359,360,oeo,2,"Some mortals are not people. 
+No Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+360,361,oia,2,"Some plants are not flowers. 
+Some roses are flowers. 
+Therefore, all roses are plants. ",No,0
+361,362,oia,2,"Some warm-blooded animals are not mammals. 
+Some dogs are mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+362,363,oia,2,"Some mortals are not people. 
+Some Greeks are people. 
+Therefore, all Greeks are mortals. ",No,0
+363,364,oie,2,"Some plants are not flowers. 
+Some roses are flowers. 
+Therefore, no roses are plants. ",No,0
+364,365,oie,2,"Some warm-blooded animals are not mammals. 
+Some dogs are mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+365,366,oie,2,"Some mortals are not people. 
+Some Greeks are people. 
+Therefore, no Greeks are mortals. ",No,0
+366,367,oii,2,"Some plants are not flowers. 
+Some roses are flowers. 
+Therefore, some roses are plants. ",No,0
+367,368,oii,2,"Some warm-blooded animals are not mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+368,369,oii,2,"Some mortals are not people. 
+Some Greeks are people. 
+Therefore, some Greeks are mortals. ",No,0
+369,370,oio,2,"Some plants are not flowers. 
+Some roses are flowers. 
+Therefore, some roses are not plants. ",No,0
+370,371,oio,2,"Some warm-blooded animals are not mammals. 
+Some dogs are mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+371,372,oio,2,"Some mortals are not people. 
+Some Greeks are people. 
+Therefore, some Greeks are not mortals. ",No,0
+372,373,ooa,2,"Some plants are not flowers. 
+Some roses are not flowers. 
+Therefore, all roses are plants. ",No,0
+373,374,ooa,2,"Some warm-blooded animals are not mammals. 
+Some dogs are not mammals. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+374,375,ooa,2,"Some mortals are not people. 
+Some Greeks are not people. 
+Therefore, all Greeks are mortals. ",No,0
+375,376,ooe,2,"Some plants are not flowers. 
+Some roses are not flowers. 
+Therefore, no roses are plants. ",No,0
+376,377,ooe,2,"Some warm-blooded animals are not mammals. 
+Some dogs are not mammals. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+377,378,ooe,2,"Some mortals are not people. 
+Some Greeks are not people. 
+Therefore, no Greeks are mortals. ",No,0
+378,379,ooi,2,"Some plants are not flowers. 
+Some roses are not flowers. 
+Therefore, some roses are plants. ",No,0
+379,380,ooi,2,"Some warm-blooded animals are not mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+380,381,ooi,2,"Some mortals are not people. 
+Some Greeks are not people. 
+Therefore, some Greeks are mortals. ",No,0
+381,382,ooo,2,"Some plants are not flowers. 
+Some roses are not flowers. 
+Therefore, some roses are not plants. ",No,0
+382,383,ooo,2,"Some warm-blooded animals are not mammals. 
+Some dogs are not mammals. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+383,384,ooo,2,"Some mortals are not people. 
+Some Greeks are not people. 
+Therefore, some Greeks are not mortals. ",No,0
+384,385,aaa,3,"All flowers are plants. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+385,386,aaa,3,"All mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+386,387,aaa,3,"All people are mortals. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+387,388,aae,3,"All flowers are plants. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+388,389,aae,3,"All mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+389,390,aae,3,"All people are mortals. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+390,391,aai,3,"All flowers are plants. 
+All flowers are roses. 
+Therefore, some roses are plants. ",Yes,1
+391,392,aai,3,"All mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",Yes,1
+392,393,aai,3,"All people are mortals. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",Yes,1
+393,394,aao,3,"All flowers are plants. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+394,395,aao,3,"All mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+395,396,aao,3,"All people are mortals. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+396,397,aea,3,"All flowers are plants. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+397,398,aea,3,"All mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+398,399,aea,3,"All people are mortals. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+399,400,aee,3,"All flowers are plants. 
+No flowers are roses. 
+Therefore, no roses are plants. ",No,0
+400,401,aee,3,"All mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+401,402,aee,3,"All people are mortals. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+402,403,aei,3,"All flowers are plants. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+403,404,aei,3,"All mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+404,405,aei,3,"All people are mortals. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+405,406,aeo,3,"All flowers are plants. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+406,407,aeo,3,"All mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+407,408,aeo,3,"All people are mortals. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+408,409,aia,3,"All flowers are plants. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+409,410,aia,3,"All mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+410,411,aia,3,"All people are mortals. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+411,412,aie,3,"All flowers are plants. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+412,413,aie,3,"All mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+413,414,aie,3,"All people are mortals. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+414,415,aii,3,"All flowers are plants. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",Yes,1
+415,416,aii,3,"All mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",Yes,1
+416,417,aii,3,"All people are mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",Yes,1
+417,418,aio,3,"All flowers are plants. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+418,419,aio,3,"All mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+419,420,aio,3,"All people are mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+420,421,aoa,3,"All flowers are plants. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+421,422,aoa,3,"All mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+422,423,aoa,3,"All people are mortals. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+423,424,aoe,3,"All flowers are plants. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+424,425,aoe,3,"All mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+425,426,aoe,3,"All people are mortals. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+426,427,aoi,3,"All flowers are plants. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+427,428,aoi,3,"All mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+428,429,aoi,3,"All people are mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+429,430,aoo,3,"All flowers are plants. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+430,431,aoo,3,"All mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+431,432,aoo,3,"All people are mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+432,433,eaa,3,"No flowers are plants. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+433,434,eaa,3,"No mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+434,435,eaa,3,"No people are mortals. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+435,436,eae,3,"No flowers are plants. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+436,437,eae,3,"No mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+437,438,eae,3,"No people are mortals. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+438,439,eai,3,"No flowers are plants. 
+All flowers are roses. 
+Therefore, some roses are plants. ",No,0
+439,440,eai,3,"No mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+440,441,eai,3,"No people are mortals. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+441,442,eao,3,"No flowers are plants. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",Yes,1
+442,443,eao,3,"No mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+443,444,eao,3,"No people are mortals. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",Yes,1
+444,445,eea,3,"No flowers are plants. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+445,446,eea,3,"No mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+446,447,eea,3,"No people are mortals. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+447,448,eee,3,"No flowers are plants. 
+No flowers are roses. 
+Therefore, no roses are plants. ",No,0
+448,449,eee,3,"No mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+449,450,eee,3,"No people are mortals. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+450,451,eei,3,"No flowers are plants. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+451,452,eei,3,"No mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+452,453,eei,3,"No people are mortals. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+453,454,eeo,3,"No flowers are plants. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+454,455,eeo,3,"No mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+455,456,eeo,3,"No people are mortals. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+456,457,eia,3,"No flowers are plants. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+457,458,eia,3,"No mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+458,459,eia,3,"No people are mortals. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+459,460,eie,3,"No flowers are plants. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+460,461,eie,3,"No mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+461,462,eie,3,"No people are mortals. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+462,463,eii,3,"No flowers are plants. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",No,0
+463,464,eii,3,"No mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+464,465,eii,3,"No people are mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+465,466,eio,3,"No flowers are plants. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",Yes,1
+466,467,eio,3,"No mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+467,468,eio,3,"No people are mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",Yes,1
+468,469,eoa,3,"No flowers are plants. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+469,470,eoa,3,"No mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+470,471,eoa,3,"No people are mortals. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+471,472,eoe,3,"No flowers are plants. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+472,473,eoe,3,"No mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+473,474,eoe,3,"No people are mortals. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+474,475,eoi,3,"No flowers are plants. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+475,476,eoi,3,"No mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+476,477,eoi,3,"No people are mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+477,478,eoo,3,"No flowers are plants. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+478,479,eoo,3,"No mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+479,480,eoo,3,"No people are mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+480,481,iaa,3,"Some flowers are plants. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+481,482,iaa,3,"Some mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+482,483,iaa,3,"Some people are mortals. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+483,484,iae,3,"Some flowers are plants. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+484,485,iae,3,"Some mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+485,486,iae,3,"Some people are mortals. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+486,487,iai,3,"Some flowers are plants. 
+All flowers are roses. 
+Therefore, some roses are plants. ",Yes,1
+487,488,iai,3,"Some mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",Yes,1
+488,489,iai,3,"Some people are mortals. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",Yes,1
+489,490,iao,3,"Some flowers are plants. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+490,491,iao,3,"Some mammals are warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+491,492,iao,3,"Some people are mortals. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+492,493,iea,3,"Some flowers are plants. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+493,494,iea,3,"Some mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+494,495,iea,3,"Some people are mortals. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+495,496,iee,3,"Some flowers are plants. 
+No flowers are roses. 
+Therefore, no roses are plants. ",No,0
+496,497,iee,3,"Some mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+497,498,iee,3,"Some people are mortals. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+498,499,iei,3,"Some flowers are plants. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+499,500,iei,3,"Some mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+500,501,iei,3,"Some people are mortals. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+501,502,ieo,3,"Some flowers are plants. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+502,503,ieo,3,"Some mammals are warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+503,504,ieo,3,"Some people are mortals. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+504,505,iia,3,"Some flowers are plants. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+505,506,iia,3,"Some mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+506,507,iia,3,"Some people are mortals. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+507,508,iie,3,"Some flowers are plants. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+508,509,iie,3,"Some mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+509,510,iie,3,"Some people are mortals. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+510,511,iii,3,"Some flowers are plants. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",No,0
+511,512,iii,3,"Some mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+512,513,iii,3,"Some people are mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+513,514,iio,3,"Some flowers are plants. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+514,515,iio,3,"Some mammals are warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+515,516,iio,3,"Some people are mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+516,517,ioa,3,"Some flowers are plants. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+517,518,ioa,3,"Some mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+518,519,ioa,3,"Some people are mortals. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+519,520,ioe,3,"Some flowers are plants. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+520,521,ioe,3,"Some mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+521,522,ioe,3,"Some people are mortals. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+522,523,ioi,3,"Some flowers are plants. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+523,524,ioi,3,"Some mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+524,525,ioi,3,"Some people are mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+525,526,ioo,3,"Some flowers are plants. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+526,527,ioo,3,"Some mammals are warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+527,528,ioo,3,"Some people are mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+528,529,oaa,3,"Some flowers are not plants. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+529,530,oaa,3,"Some mammals are not warm-blooded animals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+530,531,oaa,3,"Some people are not mortals. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+531,532,oae,3,"Some flowers are not plants. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+532,533,oae,3,"Some mammals are not warm-blooded animals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+533,534,oae,3,"Some people are not mortals. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+534,535,oai,3,"Some flowers are not plants. 
+All flowers are roses. 
+Therefore, some roses are plants. ",No,0
+535,536,oai,3,"Some mammals are not warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+536,537,oai,3,"Some people are not mortals. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+537,538,oao,3,"Some flowers are not plants. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",Yes,1
+538,539,oao,3,"Some mammals are not warm-blooded animals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+539,540,oao,3,"Some people are not mortals. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",Yes,1
+540,541,oea,3,"Some flowers are not plants. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+541,542,oea,3,"Some mammals are not warm-blooded animals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+542,543,oea,3,"Some people are not mortals. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+543,544,oee,3,"Some flowers are not plants. 
+No flowers are roses. 
+Therefore, no roses are plants. ",No,0
+544,545,oee,3,"Some mammals are not warm-blooded animals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+545,546,oee,3,"Some people are not mortals. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+546,547,oei,3,"Some flowers are not plants. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+547,548,oei,3,"Some mammals are not warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+548,549,oei,3,"Some people are not mortals. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+549,550,oeo,3,"Some flowers are not plants. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+550,551,oeo,3,"Some mammals are not warm-blooded animals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+551,552,oeo,3,"Some people are not mortals. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+552,553,oia,3,"Some flowers are not plants. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+553,554,oia,3,"Some mammals are not warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+554,555,oia,3,"Some people are not mortals. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+555,556,oie,3,"Some flowers are not plants. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+556,557,oie,3,"Some mammals are not warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+557,558,oie,3,"Some people are not mortals. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+558,559,oii,3,"Some flowers are not plants. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",No,0
+559,560,oii,3,"Some mammals are not warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+560,561,oii,3,"Some people are not mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+561,562,oio,3,"Some flowers are not plants. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+562,563,oio,3,"Some mammals are not warm-blooded animals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+563,564,oio,3,"Some people are not mortals. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+564,565,ooa,3,"Some flowers are not plants. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+565,566,ooa,3,"Some mammals are not warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+566,567,ooa,3,"Some people are not mortals. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+567,568,ooe,3,"Some flowers are not plants. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+568,569,ooe,3,"Some mammals are not warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+569,570,ooe,3,"Some people are not mortals. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+570,571,ooi,3,"Some flowers are not plants. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+571,572,ooi,3,"Some mammals are not warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+572,573,ooi,3,"Some people are not mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+573,574,ooo,3,"Some flowers are not plants. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+574,575,ooo,3,"Some mammals are not warm-blooded animals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+575,576,ooo,3,"Some people are not mortals. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+576,577,aaa,4,"All plants are flowers. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+577,578,aaa,4,"All warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+578,579,aaa,4,"All mortals are people. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+579,580,aae,4,"All plants are flowers. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+580,581,aae,4,"All warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+581,582,aae,4,"All mortals are people. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+582,583,aai,4,"All plants are flowers. 
+All flowers are roses. 
+Therefore, some roses are plants. ",Yes,1
+583,584,aai,4,"All warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",Yes,1
+584,585,aai,4,"All mortals are people. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",Yes,1
+585,586,aao,4,"All plants are flowers. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+586,587,aao,4,"All warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+587,588,aao,4,"All mortals are people. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+588,589,aea,4,"All plants are flowers. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+589,590,aea,4,"All warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+590,591,aea,4,"All mortals are people. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+591,592,aee,4,"All plants are flowers. 
+No flowers are roses. 
+Therefore, no roses are plants. ",Yes,1
+592,593,aee,4,"All warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",Yes,1
+593,594,aee,4,"All mortals are people. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",Yes,1
+594,595,aei,4,"All plants are flowers. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+595,596,aei,4,"All warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+596,597,aei,4,"All mortals are people. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+597,598,aeo,4,"All plants are flowers. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",Yes,1
+598,599,aeo,4,"All warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+599,600,aeo,4,"All mortals are people. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",Yes,1
+600,601,aia,4,"All plants are flowers. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+601,602,aia,4,"All warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+602,603,aia,4,"All mortals are people. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+603,604,aie,4,"All plants are flowers. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+604,605,aie,4,"All warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+605,606,aie,4,"All mortals are people. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+606,607,aii,4,"All plants are flowers. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",No,0
+607,608,aii,4,"All warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+608,609,aii,4,"All mortals are people. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+609,610,aio,4,"All plants are flowers. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+610,611,aio,4,"All warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+611,612,aio,4,"All mortals are people. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+612,613,aoa,4,"All plants are flowers. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+613,614,aoa,4,"All warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+614,615,aoa,4,"All mortals are people. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+615,616,aoe,4,"All plants are flowers. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+616,617,aoe,4,"All warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+617,618,aoe,4,"All mortals are people. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+618,619,aoi,4,"All plants are flowers. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+619,620,aoi,4,"All warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+620,621,aoi,4,"All mortals are people. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+621,622,aoo,4,"All plants are flowers. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+622,623,aoo,4,"All warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+623,624,aoo,4,"All mortals are people. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+624,625,eaa,4,"No plants are flowers. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+625,626,eaa,4,"No warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+626,627,eaa,4,"No mortals are people. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+627,628,eae,4,"No plants are flowers. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+628,629,eae,4,"No warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+629,630,eae,4,"No mortals are people. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+630,631,eai,4,"No plants are flowers. 
+All flowers are roses. 
+Therefore, some roses are plants. ",No,0
+631,632,eai,4,"No warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+632,633,eai,4,"No mortals are people. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+633,634,eao,4,"No plants are flowers. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",Yes,1
+634,635,eao,4,"No warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+635,636,eao,4,"No mortals are people. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",Yes,1
+636,637,eea,4,"No plants are flowers. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+637,638,eea,4,"No warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+638,639,eea,4,"No mortals are people. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+639,640,eee,4,"No plants are flowers. 
+No flowers are roses. 
+Therefore, no roses are plants. ",No,0
+640,641,eee,4,"No warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+641,642,eee,4,"No mortals are people. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+642,643,eei,4,"No plants are flowers. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+643,644,eei,4,"No warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+644,645,eei,4,"No mortals are people. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+645,646,eeo,4,"No plants are flowers. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+646,647,eeo,4,"No warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+647,648,eeo,4,"No mortals are people. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+648,649,eia,4,"No plants are flowers. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+649,650,eia,4,"No warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+650,651,eia,4,"No mortals are people. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+651,652,eie,4,"No plants are flowers. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+652,653,eie,4,"No warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+653,654,eie,4,"No mortals are people. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+654,655,eii,4,"No plants are flowers. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",No,0
+655,656,eii,4,"No warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+656,657,eii,4,"No mortals are people. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+657,658,eio,4,"No plants are flowers. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",Yes,1
+658,659,eio,4,"No warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",Yes,1
+659,660,eio,4,"No mortals are people. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",Yes,1
+660,661,eoa,4,"No plants are flowers. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+661,662,eoa,4,"No warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+662,663,eoa,4,"No mortals are people. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+663,664,eoe,4,"No plants are flowers. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+664,665,eoe,4,"No warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+665,666,eoe,4,"No mortals are people. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+666,667,eoi,4,"No plants are flowers. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+667,668,eoi,4,"No warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+668,669,eoi,4,"No mortals are people. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+669,670,eoo,4,"No plants are flowers. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+670,671,eoo,4,"No warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+671,672,eoo,4,"No mortals are people. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+672,673,iaa,4,"Some plants are flowers. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+673,674,iaa,4,"Some warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+674,675,iaa,4,"Some mortals are people. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+675,676,iae,4,"Some plants are flowers. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+676,677,iae,4,"Some warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+677,678,iae,4,"Some mortals are people. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+678,679,iai,4,"Some plants are flowers. 
+All flowers are roses. 
+Therefore, some roses are plants. ",Yes,1
+679,680,iai,4,"Some warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",Yes,1
+680,681,iai,4,"Some mortals are people. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",Yes,1
+681,682,iao,4,"Some plants are flowers. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+682,683,iao,4,"Some warm-blooded animals are mammals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+683,684,iao,4,"Some mortals are people. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+684,685,iea,4,"Some plants are flowers. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+685,686,iea,4,"Some warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+686,687,iea,4,"Some mortals are people. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+687,688,iee,4,"Some plants are flowers. 
+No flowers are roses. 
+Therefore, no roses are plants. ",No,0
+688,689,iee,4,"Some warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+689,690,iee,4,"Some mortals are people. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+690,691,iei,4,"Some plants are flowers. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+691,692,iei,4,"Some warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+692,693,iei,4,"Some mortals are people. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+693,694,ieo,4,"Some plants are flowers. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+694,695,ieo,4,"Some warm-blooded animals are mammals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+695,696,ieo,4,"Some mortals are people. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+696,697,iia,4,"Some plants are flowers. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+697,698,iia,4,"Some warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+698,699,iia,4,"Some mortals are people. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+699,700,iie,4,"Some plants are flowers. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+700,701,iie,4,"Some warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+701,702,iie,4,"Some mortals are people. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+702,703,iii,4,"Some plants are flowers. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",No,0
+703,704,iii,4,"Some warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+704,705,iii,4,"Some mortals are people. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+705,706,iio,4,"Some plants are flowers. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+706,707,iio,4,"Some warm-blooded animals are mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+707,708,iio,4,"Some mortals are people. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+708,709,ioa,4,"Some plants are flowers. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+709,710,ioa,4,"Some warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+710,711,ioa,4,"Some mortals are people. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+711,712,ioe,4,"Some plants are flowers. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+712,713,ioe,4,"Some warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+713,714,ioe,4,"Some mortals are people. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+714,715,ioi,4,"Some plants are flowers. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+715,716,ioi,4,"Some warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+716,717,ioi,4,"Some mortals are people. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+717,718,ioo,4,"Some plants are flowers. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+718,719,ioo,4,"Some warm-blooded animals are mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+719,720,ioo,4,"Some mortals are people. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+720,721,oaa,4,"Some plants are not flowers. 
+All flowers are roses. 
+Therefore, all roses are plants. ",No,0
+721,722,oaa,4,"Some warm-blooded animals are not mammals. 
+All mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+722,723,oaa,4,"Some mortals are not people. 
+All people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+723,724,oae,4,"Some plants are not flowers. 
+All flowers are roses. 
+Therefore, no roses are plants. ",No,0
+724,725,oae,4,"Some warm-blooded animals are not mammals. 
+All mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+725,726,oae,4,"Some mortals are not people. 
+All people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+726,727,oai,4,"Some plants are not flowers. 
+All flowers are roses. 
+Therefore, some roses are plants. ",No,0
+727,728,oai,4,"Some warm-blooded animals are not mammals. 
+All mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+728,729,oai,4,"Some mortals are not people. 
+All people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+729,730,oao,4,"Some plants are not flowers. 
+All flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+730,731,oao,4,"Some warm-blooded animals are not mammals. 
+All mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+731,732,oao,4,"Some mortals are not people. 
+All people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+732,733,oea,4,"Some plants are not flowers. 
+No flowers are roses. 
+Therefore, all roses are plants. ",No,0
+733,734,oea,4,"Some warm-blooded animals are not mammals. 
+No mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+734,735,oea,4,"Some mortals are not people. 
+No people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+735,736,oee,4,"Some plants are not flowers. 
+No flowers are roses. 
+Therefore, no roses are plants. ",No,0
+736,737,oee,4,"Some warm-blooded animals are not mammals. 
+No mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+737,738,oee,4,"Some mortals are not people. 
+No people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+738,739,oei,4,"Some plants are not flowers. 
+No flowers are roses. 
+Therefore, some roses are plants. ",No,0
+739,740,oei,4,"Some warm-blooded animals are not mammals. 
+No mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+740,741,oei,4,"Some mortals are not people. 
+No people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+741,742,oeo,4,"Some plants are not flowers. 
+No flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+742,743,oeo,4,"Some warm-blooded animals are not mammals. 
+No mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+743,744,oeo,4,"Some mortals are not people. 
+No people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+744,745,oia,4,"Some plants are not flowers. 
+Some flowers are roses. 
+Therefore, all roses are plants. ",No,0
+745,746,oia,4,"Some warm-blooded animals are not mammals. 
+Some mammals are dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+746,747,oia,4,"Some mortals are not people. 
+Some people are Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+747,748,oie,4,"Some plants are not flowers. 
+Some flowers are roses. 
+Therefore, no roses are plants. ",No,0
+748,749,oie,4,"Some warm-blooded animals are not mammals. 
+Some mammals are dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+749,750,oie,4,"Some mortals are not people. 
+Some people are Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+750,751,oii,4,"Some plants are not flowers. 
+Some flowers are roses. 
+Therefore, some roses are plants. ",No,0
+751,752,oii,4,"Some warm-blooded animals are not mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+752,753,oii,4,"Some mortals are not people. 
+Some people are Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+753,754,oio,4,"Some plants are not flowers. 
+Some flowers are roses. 
+Therefore, some roses are not plants. ",No,0
+754,755,oio,4,"Some warm-blooded animals are not mammals. 
+Some mammals are dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+755,756,oio,4,"Some mortals are not people. 
+Some people are Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
+756,757,ooa,4,"Some plants are not flowers. 
+Some flowers are not roses. 
+Therefore, all roses are plants. ",No,0
+757,758,ooa,4,"Some warm-blooded animals are not mammals. 
+Some mammals are not dogs. 
+Therefore, all dogs are warm-blooded animals. ",No,0
+758,759,ooa,4,"Some mortals are not people. 
+Some people are not Greeks. 
+Therefore, all Greeks are mortals. ",No,0
+759,760,ooe,4,"Some plants are not flowers. 
+Some flowers are not roses. 
+Therefore, no roses are plants. ",No,0
+760,761,ooe,4,"Some warm-blooded animals are not mammals. 
+Some mammals are not dogs. 
+Therefore, no dogs are warm-blooded animals. ",No,0
+761,762,ooe,4,"Some mortals are not people. 
+Some people are not Greeks. 
+Therefore, no Greeks are mortals. ",No,0
+762,763,ooi,4,"Some plants are not flowers. 
+Some flowers are not roses. 
+Therefore, some roses are plants. ",No,0
+763,764,ooi,4,"Some warm-blooded animals are not mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are warm-blooded animals. ",No,0
+764,765,ooi,4,"Some mortals are not people. 
+Some people are not Greeks. 
+Therefore, some Greeks are mortals. ",No,0
+765,766,ooo,4,"Some plants are not flowers. 
+Some flowers are not roses. 
+Therefore, some roses are not plants. ",No,0
+766,767,ooo,4,"Some warm-blooded animals are not mammals. 
+Some mammals are not dogs. 
+Therefore, some dogs are not warm-blooded animals. ",No,0
+767,768,ooo,4,"Some mortals are not people. 
+Some people are not Greeks. 
+Therefore, some Greeks are not mortals. ",No,0
