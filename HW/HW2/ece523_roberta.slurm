@@ -30,8 +30,8 @@ python -m ipykernel install --user --name pyenv --display-name "Python (pyenv)"
 # Verify key imports before running the notebook
 python -c "import torch; import transformers; import sklearn; print(f'torch={torch.__version__}, transformers={transformers.__version__}, GPU={torch.cuda.is_available()}')"
 
-# Run the notebook using the pyenv kernel (system python3 kernel lacks transformers)
-python -m papermill hw2_roberta.ipynb hw2_roberta.ipynb --no-progress-bar -k pyenv
+# Run the notebook using the pyenv kernel — --log-output sends cell prints to stdout
+python -m papermill hw2_roberta.ipynb hw2_roberta.ipynb --no-progress-bar --log-output -k pyenv
 
 # Clean up model checkpoints to save disk space
 rm -rf ./roberta_syllogism
