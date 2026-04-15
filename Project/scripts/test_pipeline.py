@@ -108,6 +108,14 @@ def main():
     parser.add_argument("--max_sequences", type=int, default=None)
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--vis_threshold", type=float, default=0.35)
+    parser.add_argument("--use_gt_uv", action="store_true",
+                        help="Bypass detector entirely — feed ground-truth UV to the LSTM. "
+                             "Use this to measure the LSTM ceiling performance independently "
+                             "of detector quality.")
+    parser.add_argument("--classical_detector", action="store_true",
+                        help="Use background-subtraction + blob-size detection instead of "
+                             "the learned detector.  No domain gap; works best for a static "
+                             "camera where the ball is the only small fast-moving object.")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -141,7 +149,16 @@ def main():
             gt_xyz = sample["xyz"].cpu().numpy()
             gt_vis = sample["visible"].cpu().numpy()
 
-            result = pipeline.run_sequence(frames, camera)
+            if args.use_gt_uv:
+                result = pipeline.run_sequence(
+                    frames, camera,
+                    precomputed_uv=gt_uv,
+                    precomputed_vis=gt_vis,
+                )
+            elif args.classical_detector:
+                result = pipeline.run_sequence(frames, camera, use_classical=True)
+            else:
+                result = pipeline.run_sequence(frames, camera)
 
             if args.verbose:
                 print(f"seq {idx}")
@@ -159,7 +176,9 @@ def main():
                 print(f"Warning: NaN/Inf detected in sequence {idx}")
 
             # ---- Ball flight metrics from predicted 3D trajectory ----
-            fps_seq = float(cfg.get("render", {}).get("fps", 60.0))
+            # Use the sequence fps stored in the dataset metadata; fall back to
+            # the Kalman dt so at least carry/ToF are computed consistently.
+            fps_seq = float(sample.get("fps", 1.0 / cfg["kalman"]["dt"]))
             ball_metrics = compute_ball_metrics(result.xyz_pred, fps_seq)
 
             # Spin: use model spin_head if its backspin prediction is physiologically
@@ -231,8 +250,7 @@ def main():
                         draw_metrics_panel(bgr, ball_metrics, spin=spin_display)
                     vis_frames.append(bgr)
 
-                fps = float(cfg.get("render", {}).get("fps", 60.0))
-                render_video(vis_frames, out_dir / f"seq_{idx:04d}_overlay.mp4", fps=fps)
+                render_video(vis_frames, out_dir / f"seq_{idx:04d}_overlay.mp4", fps=fps_seq)
 
     metrics_path = out_dir / "metrics.csv"
     if rows:

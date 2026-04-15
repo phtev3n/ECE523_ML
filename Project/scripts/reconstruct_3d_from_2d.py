@@ -97,15 +97,23 @@ def simulate_trajectory(
 
 
 def project_to_2d(xyz: np.ndarray, camera: dict) -> np.ndarray:
-    """Pinhole projection matching golf_tracer convention."""
+    """Pinhole projection matching golf_tracer convention (rotated frame).
+
+    Convention matches frames extracted with --orient 180 (180° rotated pinhole):
+      u_rot = (W-1-cx) - fx*x/z
+      v_rot = (H-1-cy) + fy*(y - cam_h)/z
+    Both u and v increase in the opposite direction from the standard pinhole.
+    """
     fx = float(camera["fx"])
     fy = float(camera["fy"])
     cx = float(camera["cx"])
     cy = float(camera["cy"])
     cam_h = float(camera.get("camera_height_m", 0.0))
+    H = float(camera.get("image_h", 512))
+    W = float(camera.get("image_w", 512))
     z = np.clip(xyz[:, 2], 1e-3, None)
-    u = fx * xyz[:, 0] / z + cx
-    v = fy * (cam_h - xyz[:, 1]) / z + cy
+    u = (W - 1 - cx) - fx * xyz[:, 0] / z
+    v = (H - 1 - cy) + fy * (xyz[:, 1] - cam_h) / z
     return np.stack([u, v], axis=1)
 
 
@@ -247,6 +255,9 @@ def main() -> None:
     with open(args.camera_params) as f:
         cam_data = json.load(f)
     camera = cam_data["pipeline_intrinsics"]
+    # Ensure image_h is present for the rotated-frame projection convention
+    if "image_h" not in camera:
+        camera["image_h"] = cam_data.get("target_size", 512)
 
     ann_paths = [Path(p) for p in args.annotations_2d]
     for p in ann_paths:

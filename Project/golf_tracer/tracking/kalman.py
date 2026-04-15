@@ -22,6 +22,7 @@ class Kalman2D:
         process_var: float = 15.0,
         meas_var: float = 4.0,
         max_coast_frames: int = 8,
+        gate_sigma: float = 0.0,
     ):
         """
         Args:
@@ -34,9 +35,20 @@ class Kalman2D:
             max_coast_frames: Maximum consecutive frames the filter will
                               propagate without a measurement update before
                               the track is considered lost and re-initialised.
+            gate_sigma:       Innovation gate threshold in standard deviations.
+                              A measurement is rejected (and the filter coasts)
+                              if its Mahalanobis distance from the predicted
+                              position exceeds this value.  Set to 0 to disable
+                              gating (legacy behaviour).  A value of 3.0 rejects
+                              measurements more than 3-sigma from the prediction,
+                              which corresponds to chi2(2) = 9.0, capturing 99%
+                              of true ball detections while rejecting gross
+                              outliers (e.g. detector locked on the golfer body).
         """
         self.dt = float(dt)
         self.max_coast_frames = int(max_coast_frames)
+        # gate_sigma=0 disables gating; >0 enables chi-squared innovation gate
+        self._gate_chi2 = float(gate_sigma) ** 2 if gate_sigma > 0.0 else 0.0
 
         # State transition matrix: x_{t+1} = F * x_t
         # Models constant velocity: position += velocity * dt
@@ -78,6 +90,27 @@ class Kalman2D:
         self.x = self.F @ self.x
         self.P = self.F @ self.P @ self.F.T + self.Q
         return self.x[:2, 0].copy()   # return predicted (u, v)
+
+    def gate(self, uv) -> bool:
+        """Return True if the measurement passes the innovation gate.
+
+        Computes the squared Mahalanobis distance between the measurement and
+        the predicted position:
+            d² = yᵀ · S⁻¹ · y    where y = z - H·x̂,  S = H·P·Hᵀ + R
+
+        For a 2-DOF chi-squared distribution:
+            gate_sigma=2 → d² < 4    (chi² ≈ 86% of inliers)
+            gate_sigma=3 → d² < 9    (chi² ≈ 99% of inliers)
+
+        Returns True (accept) when gate is disabled (gate_sigma=0) or d² ≤ threshold.
+        """
+        if self._gate_chi2 <= 0.0 or not self.initialized:
+            return True
+        z = np.array(uv, dtype=np.float32).reshape(2, 1)
+        y = z - self.H @ self.x
+        S = self.H @ self.P @ self.H.T + self.R
+        d2 = float(y.T @ np.linalg.inv(S) @ y)
+        return d2 <= self._gate_chi2
 
     def update(self, uv):
         """Fuse a new measurement with the predicted state (posterior estimate).

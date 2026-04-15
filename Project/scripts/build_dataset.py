@@ -52,15 +52,23 @@ import numpy as np
 
 
 def reproject_xyz(xyz: np.ndarray, camera: dict) -> np.ndarray:
-    """Project 3D points to 2D using the pipeline's projection convention."""
+    """Project 3D points to 2D using the pipeline's projection convention.
+
+    Matches frames extracted with --orient 180 (180° rotated pinhole):
+      u_rot = (W-1-cx) - fx*x/z
+      v_rot = (H-1-cy) + fy*(y - cam_h)/z
+    Both u and v increase in the opposite direction from the standard pinhole.
+    """
     fx = float(camera["fx"])
     fy = float(camera["fy"])
     cx = float(camera["cx"])
     cy = float(camera["cy"])
     camera_height = float(camera.get("camera_height_m", 0.0))
+    H = float(camera.get("image_h", 512))
+    W = float(camera.get("image_w", 512))
     z = np.clip(xyz[:, 2], 1e-3, None)
-    u = fx * xyz[:, 0] / z + cx
-    v = fy * (camera_height - xyz[:, 1]) / z + cy
+    u = (W - 1 - cx) - fx * xyz[:, 0] / z
+    v = (H - 1 - cy) + fy * (xyz[:, 1] - camera_height) / z
     return np.stack([u, v], axis=1)
 
 
@@ -211,7 +219,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     mode_label = "2D-only (detector)" if args.mode_2d_only else "full 3D"
-    print(f"Building dataset ({mode_label}): {len(shot_map)} shots → {out_dir}")
+    print(f"Building dataset ({mode_label}): {len(shot_map)} shots -> {out_dir}")
     print(f"Camera: fx={camera['fx']:.1f} fy={camera['fy']:.1f} cx={camera['cx']:.1f} cy={camera['cy']:.1f} h={camera['camera_height_m']}m")
 
     results = []

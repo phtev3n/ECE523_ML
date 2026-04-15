@@ -17,6 +17,11 @@ but the recon3d_loss will be invalid and should not be used for evaluation.
 This dataset supports both 'detector' mode (single-frame, returns one image
 and its annotations) and 'trajectory' mode (full sequence, returns all frames
 and the complete feature tensor for the LSTM).
+
+In 'detector' mode the dataset enumerates every individual annotated frame
+across all sequences (not one frame per sequence), so the effective dataset
+size is num_sequences × frames_per_sequence.  Optional colour augmentation
+is applied to each image when augment=True.
 """
 from __future__ import annotations
 
@@ -36,6 +41,24 @@ def gaussian_2d(h: int, w: int, cx: float, cy: float, sigma: float) -> np.ndarra
     return g.astype(np.float32)
 
 
+def _augment_image(img: np.ndarray) -> np.ndarray:
+    """Apply colour augmentation to a uint8 HxWx3 BGR image (in-place safe)."""
+    img = img.copy()
+    # Brightness / contrast jitter
+    alpha = np.random.uniform(0.75, 1.25)   # contrast
+    beta  = np.random.uniform(-25.0, 25.0)  # brightness shift (0-255 scale)
+    img = np.clip(alpha * img.astype(np.float32) + beta, 0, 255).astype(np.uint8)
+    # Saturation jitter in HSV
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV).astype(np.float32)
+    hsv[..., 1] = np.clip(hsv[..., 1] * np.random.uniform(0.7, 1.3), 0, 255)
+    hsv[..., 2] = np.clip(hsv[..., 2] * np.random.uniform(0.8, 1.2), 0, 255)
+    img = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
+    # Gaussian noise
+    noise = np.random.normal(0, 5.0, img.shape).astype(np.float32)
+    img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
+    return img
+
+
 class RealGolfSequenceDataset(Dataset):
     def __init__(
         self,
@@ -44,15 +67,28 @@ class RealGolfSequenceDataset(Dataset):
         mode: str = "trajectory",
         detector_scale: float = 0.25,
         detector_sigma: float = 2.0,
+        augment: bool = False,
     ):
         self.dataset_root = Path(dataset_root)
         self.sequence_length = sequence_length
         self.mode = mode
         self.detector_scale = detector_scale
         self.detector_sigma = detector_sigma
+        self.augment = augment
         self.sequences = sorted([p for p in self.dataset_root.iterdir() if p.is_dir()])
 
+        # In detector mode pre-build an index of (seq_dir, frame_meta) pairs
+        # so __len__ returns the true number of individually labelled frames.
+        if self.mode == "detector":
+            self._det_index: list[tuple[Path, dict]] = []
+            for seq_dir in self.sequences:
+                meta = read_json(seq_dir / "annotations.json")
+                for fm in meta["frames"]:
+                    self._det_index.append((seq_dir, fm))
+
     def __len__(self):
+        if self.mode == "detector":
+            return len(self._det_index)
         return len(self.sequences)
 
     def _load_sequence(self, seq_dir: Path):
@@ -109,19 +145,25 @@ class RealGolfSequenceDataset(Dataset):
         return meta, frames_t, uv_t, xyz_t, visible_t, eot, features
 
     def __getitem__(self, idx):
-        seq_dir = self.sequences[idx]
-        meta, frames_t, uv_t, xyz_t, visible_t, eot, features = self._load_sequence(seq_dir)
-
         if self.mode == "detector":
-            visible_idx = torch.where(visible_t > 0.5)[0]
-            hidden_idx = torch.where(visible_t <= 0.5)[0]
+            seq_dir, fm = self._det_index[idx]
+            img_path = seq_dir / "frames" / f"{fm['frame_index']:06d}.png"
+            img_bgr = cv2.imread(str(img_path))
+            if img_bgr is None:
+                raise FileNotFoundError(f"Could not read frame: {img_path}")
 
-            if len(visible_idx) > 0 and (len(hidden_idx) == 0 or np.random.rand() < 0.5):
-                t = int(visible_idx[np.random.randint(0, len(visible_idx))].item())
-            else:
-                t = int(hidden_idx[np.random.randint(0, len(hidden_idx))].item())
+            if self.augment:
+                img_bgr = _augment_image(img_bgr)
 
-            h, w = frames_t.shape[-2:]
+            img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+            h, w = img_rgb.shape[:2]
+            img_t = torch.from_numpy(img_rgb.astype(np.float32) / 255.0).permute(2, 0, 1)
+
+            is_visible = float(fm["visible"]) > 0.5
+            uv_raw = fm.get("uv", [0.0, 0.0])
+            uv_item = torch.tensor(uv_raw, dtype=torch.float32)
+            vis_item = torch.tensor([float(fm["visible"])], dtype=torch.float32)
+
             out_h = int(round(h * self.detector_scale))
             out_w = int(round(w * self.detector_scale))
 
@@ -129,33 +171,28 @@ class RealGolfSequenceDataset(Dataset):
             offset = np.zeros((2, out_h, out_w), dtype=np.float32)
             uncertainty = np.zeros((2, out_h, out_w), dtype=np.float32)
 
-            if visible_t[t] > 0.5:
-                u, v = uv_t[t].tolist()
+            if is_visible:
+                u, v = float(uv_raw[0]), float(uv_raw[1])
                 hu = u * self.detector_scale
                 hv = v * self.detector_scale
-
-                # Match synthetic dataset target style: Gaussian heatmap
                 heatmap = gaussian_2d(out_h, out_w, hu, hv, sigma=self.detector_sigma)
-
-                # Use floor for cell assignment, then residual offset within that cell
                 cx = int(np.clip(np.floor(hu), 0, out_w - 1))
                 cy = int(np.clip(np.floor(hv), 0, out_h - 1))
-
                 offset[0, cy, cx] = hu - cx
                 offset[1, cy, cx] = hv - cy
-
-                # Simple constant target uncertainty; optional
                 uncertainty[:, cy, cx] = 1.0
 
             return {
-                "image": frames_t[t],
-                "uv": uv_t[t],
-                "visible": visible_t[t:t + 1],
+                "image": img_t,
+                "uv": uv_item,
+                "visible": vis_item,
                 "heatmap": torch.from_numpy(heatmap[None, ...]),
                 "offset": torch.from_numpy(offset),
                 "uncertainty": torch.from_numpy(uncertainty),
             }
 
+        seq_dir = self.sequences[idx]
+        meta, frames_t, uv_t, xyz_t, visible_t, eot, features = self._load_sequence(seq_dir)
         return {
             "frames": frames_t,
             "uv": uv_t,
@@ -164,4 +201,5 @@ class RealGolfSequenceDataset(Dataset):
             "features": features,
             "eot": eot,
             "camera": meta["camera"],
+            "fps": float(meta.get("fps", 30.0)),
         }

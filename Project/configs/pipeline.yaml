@@ -1,12 +1,16 @@
 device: cuda
-image_size: [256, 256]
+image_size: [512, 512]
 sequence_length: 24
 max_test_sequences: 20
 kalman:
-  dt: 0.0166667
-  process_var: 15.0
-  meas_var: 4.0
+  dt: 0.016667
+  process_var: 500.0   # High process noise: ball decelerates; large velocity changes expected
+  meas_var: 25.0       # ~5px std detector noise when finding the correct object
   max_coast_frames: 8
+  # Innovation gate: rejects jumps > 5-sigma from predicted position.
+  # Loose enough to track the fast early frames (ball moves 30-50px/frame at impact)
+  # while still rejecting gross outliers (detector suddenly jumping to golfer body).
+  gate_sigma: 5.0
 render:
   tracer_thickness: 2
   draw_measurements: true
@@ -15,7 +19,8 @@ render:
   draw_metrics: true
 tracking:
   visibility_threshold: 0.35
-  # Set to false so the Kalman filter uses the visibility head to gate updates.
-  # With force_measurement_update: true every bad detection is blindly accepted,
-  # which is why rmse_2d_filtered equalled rmse_2d_measured.
   force_measurement_update: false
+  # Apply frame-difference motion mask to heatmap before peak decoding.
+  # Suppresses detections on static scene regions (e.g. golfer standing still
+  # after impact).  Disable only if camera is not static.
+  motion_gate: true

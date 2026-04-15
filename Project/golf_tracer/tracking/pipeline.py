@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import cv2
 import numpy as np
 import torch
+import torch.nn.functional as F
 
 from golf_tracer.models.detector import decode_heatmap
 from golf_tracer.tracking.kalman import Kalman2D
@@ -79,8 +81,110 @@ class GolfBallTrackingPipeline:
         self.config           = config
         self.device           = device
 
+    @staticmethod
+    def classical_detect(frames_tensor: torch.Tensor) -> tuple[np.ndarray, np.ndarray]:
+        """Classical background-subtraction ball detector for a static camera.
+
+        For a tripod-mounted camera, the golf ball is the only small, fast-moving
+        object after impact.  This detector:
+          1. Computes a temporal median of all frames as a background estimate.
+          2. Per frame: subtracts the background, thresholds, and finds connected
+             components (blobs).
+          3. Retains only ball-sized blobs (area 5–600 sq px at 512×512, i.e.
+             ~2–28 px diameter) — the golfer body and club create much larger blobs.
+          4. Among surviving candidates, picks the one closest to the Kalman
+             prediction, or the largest small blob when no prior track exists.
+
+        Returns
+        -------
+        uv : (T, 2) float32 — detected (u, v) in image-pixel space
+        vis : (T,) float32  — 1.0 if a ball-sized blob was found, else 0.0
+        """
+        # Convert to HxWxC uint8 numpy for OpenCV
+        frames_np = (frames_tensor.permute(0, 2, 3, 1).cpu().numpy() * 255.0).clip(0, 255).astype(np.uint8)
+        T, H, W = frames_np.shape[:3]
+
+        # --- Background: temporal median (ball is too small/fast to appear) ---
+        bg_f = np.median(frames_np.astype(np.float32), axis=0)
+        bg_gray = cv2.cvtColor(bg_f.astype(np.uint8), cv2.COLOR_RGB2GRAY).astype(np.float32)
+
+        uv_out  = np.zeros((T, 2), dtype=np.float32)
+        vis_out = np.zeros(T,      dtype=np.float32)
+
+        # Kalman to guide candidate selection across frames
+        kf = Kalman2D(dt=1.0 / 60.0, process_var=200.0, meas_var=10.0)
+
+        for t in range(T):
+            gray = cv2.cvtColor(frames_np[t], cv2.COLOR_RGB2GRAY).astype(np.float32)
+            diff = np.abs(gray - bg_gray)
+
+            # Also add frame-to-frame difference for early frames where the golfer
+            # and ball both move (temporal median won't fully remove the golfer)
+            if t > 0:
+                prev_gray = cv2.cvtColor(frames_np[t - 1], cv2.COLOR_RGB2GRAY).astype(np.float32)
+                frame_diff = np.abs(gray - prev_gray)
+                # Combine: background diff reveals ALL moving objects; frame diff
+                # emphasises CURRENTLY moving ones (ball accelerates away faster)
+                combined = np.maximum(diff * 0.6, frame_diff * 0.4)
+            else:
+                combined = diff
+
+            blurred = cv2.GaussianBlur(combined, (5, 5), 1.5)
+            _, thresh = cv2.threshold(blurred.astype(np.uint8), 18, 255, cv2.THRESH_BINARY)
+
+            # Morphological open: remove single-pixel noise
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+            thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+
+            # --- Blob analysis ---
+            num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(
+                thresh, connectivity=8
+            )
+
+            # stats columns: LEFT, TOP, WIDTH, HEIGHT, AREA (label 0 = background)
+            ball_candidates: list[tuple[float, float, float]] = []  # (cx, cy, area)
+            for lbl in range(1, num_labels):
+                area = float(stats[lbl, cv2.CC_STAT_AREA])
+                # Ball-sized filter: 5–600 sq px.  A golf ball at 5–30 m with
+                # a 512-px frame and ~600px focal length subtends ~2–15 px radius
+                # → 12–700 sq px area.  Golfer torso: >>1000 sq px.
+                if 5.0 <= area <= 600.0:
+                    cx, cy = float(centroids[lbl, 0]), float(centroids[lbl, 1])
+                    ball_candidates.append((cx, cy, area))
+
+            if ball_candidates:
+                if kf.initialized:
+                    # Kalman predict gives expected position; pick nearest candidate
+                    pred_uv = kf.predict()
+                    best = min(ball_candidates,
+                               key=lambda c: (c[0] - pred_uv[0]) ** 2 + (c[1] - pred_uv[1]) ** 2)
+                    kf.update([best[0], best[1]])
+                else:
+                    # First detection: pick the largest small blob
+                    best = max(ball_candidates, key=lambda c: c[2])
+                    kf.init([best[0], best[1]])
+
+                uv_out[t]  = [best[0], best[1]]
+                vis_out[t] = 1.0
+            else:
+                if kf.initialized and kf.can_coast:
+                    pred_uv = kf.predict()
+                    kf.miss()
+                    uv_out[t] = pred_uv
+                else:
+                    uv_out[t] = uv_out[t - 1] if t > 0 else np.array([W / 2, H / 2])
+
+        return uv_out, vis_out
+
     @torch.no_grad()
-    def run_sequence(self, frames_tensor: torch.Tensor, camera: dict) -> PipelineOutput:
+    def run_sequence(
+        self,
+        frames_tensor: torch.Tensor,
+        camera: dict,
+        precomputed_uv: np.ndarray | None = None,
+        precomputed_vis: np.ndarray | None = None,
+        use_classical: bool = False,
+    ) -> PipelineOutput:
         """Run the full pipeline on a pre-loaded frame sequence.
 
         Args:
@@ -92,45 +196,104 @@ class GolfBallTrackingPipeline:
             PipelineOutput dataclass (see field docstrings above)
         """
         T = frames_tensor.shape[0]
+        img_h, img_w = frames_tensor.shape[-2:]
+
+        vis_threshold            = float(self.config.get("tracking", {}).get("visibility_threshold", 0.35))
+        force_measurement_update = bool(self.config.get("tracking", {}).get("force_measurement_update", False))
+        use_motion_gate          = self.config.get("tracking", {}).get("motion_gate", True)
 
         detector_uv  = []
         visible_prob = []
         uncertainty  = []
 
-        vis_threshold          = float(self.config.get("tracking", {}).get("visibility_threshold", 0.35))
-        force_measurement_update = bool(self.config.get("tracking", {}).get("force_measurement_update", False))
+        # ---- Stage 1: Detection ----
+        # Three modes:
+        #   precomputed_uv : ground-truth UV passed in directly (diagnostic / ceiling test)
+        #   use_classical  : temporal background subtraction + blob size filter
+        #   default        : learned ResNet50 detector (with optional motion gate)
 
-        img_h, img_w = frames_tensor.shape[-2:]
+        if precomputed_uv is not None:
+            # Ground-truth bypass — skip both detection AND Kalman.
+            # The GT positions are exact; filtering would only add error.
+            uv_arr  = precomputed_uv.astype(np.float32)
+            vis_arr = precomputed_vis.astype(np.float32) if precomputed_vis is not None else np.ones(T, dtype=np.float32)
+            detector_uv  = uv_arr
+            visible_prob = vis_arr
+            uncertainty  = np.zeros(T, dtype=np.float32)
+            filtered = uv_arr.copy()   # bypass Kalman entirely
 
-        # ---- Stage 1: Per-frame detection ----
-        for t in range(T):
-            frame = frames_tensor[t : t + 1].to(self.device)
-            pred  = self.detector(frame)
+            # Flip u,v to match synthetic training convention.
+            # Real frames were extracted with --orient 180 so annotations have
+            # v INCREASING as the ball rises; synthetic uses v = fy*(h-y)/z + cy
+            # which has v DECREASING as the ball rises.  Flip both axes so the
+            # LSTM sees the same coordinate convention it was trained on.
+            lstm_uv = filtered.copy()
+            lstm_uv[:, 0] = (img_w - 1) - lstm_uv[:, 0]
+            lstm_uv[:, 1] = (img_h - 1) - lstm_uv[:, 1]
 
-            # Decode peak heatmap cell + sub-pixel offset → heatmap-space (u, v)
-            uv_small = decode_heatmap(pred["heatmap"], pred["offset"])[0].detach().cpu().numpy()
-            hm_h, hm_w = pred["heatmap"].shape[-2:]
+            traj_features = np.concatenate([
+                lstm_uv,
+                visible_prob[:, None],
+                uncertainty[:, None],
+                np.arange(T, dtype=np.float32)[:, None] / max(T - 1, 1),
+            ], axis=1)
+            traj_tensor = torch.from_numpy(traj_features[None]).float().to(self.device)
+            traj_pred   = self.trajectory_model(traj_tensor)
+            xyz  = traj_pred["xyz"][0].detach().cpu().numpy()
+            spin = traj_pred["spin"][0].detach().cpu().numpy() if "spin" in traj_pred else np.zeros(2, dtype=np.float32)
+            uv_rep = project_points(xyz, camera)
+            return PipelineOutput(
+                measured_uv=uv_arr, filtered_uv=filtered,
+                xyz_pred=xyz, uv_reprojected=uv_rep,
+                visible_prob=vis_arr, spin_pred=spin,
+            )
 
-            # Scale from heatmap resolution back to full image resolution
-            sx = img_w / hm_w
-            sy = img_h / hm_h
-            uv = np.array([uv_small[0] * sx, uv_small[1] * sy], dtype=np.float32)
-            uv[0] = np.clip(uv[0], 0.0, img_w - 1.0)
-            uv[1] = np.clip(uv[1], 0.0, img_h - 1.0)
+        elif use_classical:
+            # Classical motion detector — no domain gap, no GPU required
+            uv_cl, vis_cl = self.classical_detect(frames_tensor)
+            detector_uv  = list(uv_cl)
+            visible_prob = list(vis_cl)
+            uncertainty  = [0.0] * T
 
-            vis = torch.sigmoid(pred["visible_logit"]).view(-1)[0].item()
+        else:
+            # ---- Learned detector (per-frame) with optional motion gate ----
+            for t in range(T):
+                frame = frames_tensor[t : t + 1].to(self.device)
+                pred  = self.detector(frame)
 
-            # Read uncertainty from the peak heatmap cell (mean over x/y dims)
-            if "log_var" in pred:
-                x_idx = int(np.clip(round(float(uv_small[0])), 0, hm_w - 1))
-                y_idx = int(np.clip(round(float(uv_small[1])), 0, hm_h - 1))
-                lv = pred["log_var"][0, :, y_idx, x_idx].mean().item()
-            else:
-                lv = 0.0
+                hm_h, hm_w = pred["heatmap"].shape[-2:]
 
-            detector_uv.append(uv)
-            visible_prob.append(vis)
-            uncertainty.append(lv)
+                if use_motion_gate and t > 0:
+                    prev = frames_tensor[t - 1 : t].to(self.device)
+                    diff = (frame - prev).abs().mean(dim=1, keepdim=True)
+                    diff_small = F.interpolate(
+                        diff, size=(hm_h, hm_w), mode="bilinear", align_corners=False
+                    )
+                    diff_norm = diff_small / (diff_small.amax(dim=(-2, -1), keepdim=True) + 1e-6)
+                    gated_heatmap = pred["heatmap"] * (0.2 + 0.8 * diff_norm)
+                else:
+                    gated_heatmap = pred["heatmap"]
+
+                uv_small = decode_heatmap(gated_heatmap, pred["offset"])[0].detach().cpu().numpy()
+
+                sx = img_w / hm_w
+                sy = img_h / hm_h
+                uv = np.array([uv_small[0] * sx, uv_small[1] * sy], dtype=np.float32)
+                uv[0] = np.clip(uv[0], 0.0, img_w - 1.0)
+                uv[1] = np.clip(uv[1], 0.0, img_h - 1.0)
+
+                vis = torch.sigmoid(pred["visible_logit"]).view(-1)[0].item()
+
+                if "log_var" in pred:
+                    x_idx = int(np.clip(round(float(uv_small[0])), 0, hm_w - 1))
+                    y_idx = int(np.clip(round(float(uv_small[1])), 0, hm_h - 1))
+                    lv = pred["log_var"][0, :, y_idx, x_idx].mean().item()
+                else:
+                    lv = 0.0
+
+                detector_uv.append(uv)
+                visible_prob.append(vis)
+                uncertainty.append(lv)
 
         detector_uv  = np.asarray(detector_uv,  dtype=np.float32)
         visible_prob = np.asarray(visible_prob, dtype=np.float32)
@@ -152,10 +315,16 @@ class GolfBallTrackingPipeline:
                 # Always update regardless of visibility — used for debugging only
                 filt_uv = kf.update(uv)
             else:
-                if visible_prob[i] > vis_threshold:
-                    # High-confidence detection: incorporate the measurement
+                if visible_prob[i] > vis_threshold and kf.gate(uv):
+                    # High-confidence detection that passes the Mahalanobis gate:
+                    # incorporate the measurement into the state estimate.
                     filt_uv = kf.update(uv)
-                elif getattr(kf, "can_coast", False):
+                elif visible_prob[i] > vis_threshold and not kf.gate(uv):
+                    # Detector is confident but the position is geometrically
+                    # inconsistent with the current trajectory (e.g. detector
+                    # jumped to the golfer body).  Treat as a missed detection.
+                    filt_uv = kf.miss()
+                elif kf.can_coast:
                     # Low confidence but coasting budget remains: propagate only
                     filt_uv = kf.miss()
                 else:
@@ -171,9 +340,19 @@ class GolfBallTrackingPipeline:
         # Columns: [u, v, vis_prob, log_var, normalised_t]
         # The normalised time index lets the LSTM infer trajectory phase
         # (launch / apex / descent) without needing explicit fps information.
+        #
+        # Flip u,v to match synthetic training convention.
+        # Real frames were extracted with --orient 180 so annotations have
+        # v INCREASING as the ball rises; synthetic uses v = fy*(h-y)/z + cy
+        # which has v DECREASING as the ball rises.  Flip both axes so the
+        # LSTM sees the same coordinate convention it was trained on.
+        lstm_uv = filtered.copy()
+        lstm_uv[:, 0] = (img_w - 1) - lstm_uv[:, 0]
+        lstm_uv[:, 1] = (img_h - 1) - lstm_uv[:, 1]
+
         traj_features = np.concatenate(
             [
-                filtered,                                                        # (T, 2)
+                lstm_uv,                                                         # (T, 2) flipped
                 visible_prob[:, None],                                           # (T, 1)
                 uncertainty[:, None],                                            # (T, 1)
                 np.arange(T, dtype=np.float32)[:, None] / max(T - 1, 1),       # (T, 1)

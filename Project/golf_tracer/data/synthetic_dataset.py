@@ -122,7 +122,7 @@ def simulate_ballistics(T: int, fps: float) -> tuple[np.ndarray, dict]:
 
     Coordinate convention (matches project() pinhole model):
       x = lateral  (horizontal in image via u = fx*x/z + cx)
-      y = height   (vertical in image via v = fy*(cam_h-y)/z + cy)
+      y = height   (vertical in image via v increases as y increases)
       z = depth    (ball flies away from camera; z must be positive)
 
     Magnus force is modelled as:
@@ -179,7 +179,14 @@ def simulate_ballistics(T: int, fps: float) -> tuple[np.ndarray, dict]:
     vy = speed * math.sin(launch)
     vz = speed * math.cos(launch) * math.cos(side)
 
-    x, y, z = 0.0, 0.2, 10.0
+    # Randomise initial camera-to-ball depth over a realistic range.
+    # Fixed z=10m caused a systematic 2× speed overestimate on real recordings
+    # where the camera is typically 2–4m from the ball at impact.  The real
+    # camera distance was estimated at ~2.7m from the 52px/frame UV motion at
+    # impact (z = fy * v_ball / uv_rate).  Sampling 2–12m ensures the LSTM
+    # learns to infer depth from the UV arc shape rather than a fixed prior.
+    z = random.uniform(2.0, 12.0)
+    x, y = 0.0, 0.2
 
     pts = []
     for _ in range(T):
@@ -203,9 +210,20 @@ def simulate_ballistics(T: int, fps: float) -> tuple[np.ndarray, dict]:
 
 
 def project(points_xyz: np.ndarray, cam: dict) -> np.ndarray:
-    z = np.clip(points_xyz[:, 2], 1e-3, None)
-    u = cam["fx"] * points_xyz[:, 0] / z + cam["cx"]
-    v = cam["fy"] * (cam["camera_height_m"] - points_xyz[:, 1]) / z + cam["cy"]
+    """Project 3D camera-frame points to image-pixel UV.
+
+    Convention matches the real dataset (frames extracted with --orient 180).
+    A 180° rotation of the standard pinhole model gives:
+      u_rot = (W-1) - (fx*x/z + cx)  →  u_rot = (W-1-cx) - fx*x/z
+      v_rot = (H-1) - (fy*(cam_h-y)/z + cy)  →  v_rot = (H-1-cy) + fy*(y-cam_h)/z
+    Both u and v increase in the OPPOSITE direction from the standard pinhole.
+    In particular, v INCREASES as the ball rises.
+    """
+    z   = np.clip(points_xyz[:, 2], 1e-3, None)
+    H   = cam.get("image_h", 512)
+    W   = cam.get("image_w", 512)
+    u   = (W - 1 - cam["cx"]) - cam["fx"] * points_xyz[:, 0] / z
+    v   = (H - 1 - cam["cy"]) + cam["fy"] * (points_xyz[:, 1] - cam["camera_height_m"]) / z
     return np.stack([u, v], axis=1).astype(np.float32)
 
 
@@ -239,7 +257,12 @@ class SyntheticGolfTrajectoryDataset(Dataset):
         cx = self.w * random.uniform(0.44, 0.56)
         cy = self.h * random.uniform(0.48, 0.62)
         cam_h = random.uniform(0.8, 2.0)
-        return {"fx": fx, "fy": fy, "cx": cx, "cy": cy, "camera_height_m": cam_h}
+        return {
+            "fx": fx, "fy": fy, "cx": cx, "cy": cy,
+            "camera_height_m": cam_h,
+            "image_h": self.h,   # needed by project() for flipped convention
+            "image_w": self.w,
+        }
 
     def __len__(self):
         return self.num_sequences

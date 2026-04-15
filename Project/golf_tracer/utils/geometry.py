@@ -6,20 +6,20 @@ import numpy as np
 def project_points(points_xyz: np.ndarray, camera: dict) -> np.ndarray:
     """Project 3D camera-frame points to 2D image-plane coordinates.
 
-    Uses the pinhole projection model with the camera elevated above the
-    ground plane:
-        u = fx * x / z + cx
-        v = fy * (camera_height - y) / z + cy
+    Uses the 180°-rotated pinhole model matching frames extracted with
+    --orient 180.  Both u and v increase in the opposite direction from the
+    standard pinhole:
+        u_rot = (W-1-cx) - fx * x / z
+        v_rot = (H-1-cy) + fy * (y - camera_height) / z
 
-    The (camera_height - y) term accounts for the camera being mounted
-    above ground level: when the ball rises (y increases), v decreases
-    (moves up the image).  If camera_height_m is absent it defaults to 0,
-    which produces the standard pinhole formula.
+    In particular, v INCREASES as the ball rises (y increases), matching the
+    coordinate convention in the real-data annotations.
 
     Args:
         points_xyz : (N, 3) array of [x, y, z] world positions in metres.
                      x = lateral, y = height above ground, z = depth.
-        camera     : dict with keys fx, fy, cx, cy, camera_height_m.
+        camera     : dict with keys fx, fy, cx, cy, camera_height_m, and
+                     optionally image_h / image_w (default 512).
 
     Returns:
         (N, 2) array of [u, v] image-plane pixel coordinates.
@@ -29,9 +29,11 @@ def project_points(points_xyz: np.ndarray, camera: dict) -> np.ndarray:
     cx = float(camera["cx"])
     cy = float(camera["cy"])
     camera_height = float(camera.get("camera_height_m", 0.0))
+    H = float(camera.get("image_h", 512))
+    W = float(camera.get("image_w", 512))
     z = np.clip(points_xyz[:, 2], 1e-3, None)   # prevent division by zero
-    u = fx * points_xyz[:, 0] / z + cx
-    v = fy * (camera_height - points_xyz[:, 1]) / z + cy
+    u = (W - 1 - cx) - fx * points_xyz[:, 0] / z
+    v = (H - 1 - cy) + fy * (points_xyz[:, 1] - camera_height) / z
     return np.stack([u, v], axis=1)
 
 

@@ -73,10 +73,12 @@ def main():
             mode="trajectory",
         )
     else:
+        img_size = tuple(cfg.get("image_size", [256, 256]))
         dataset = SyntheticGolfTrajectoryDataset(
             num_sequences=cfg["synthetic"]["num_sequences"],
             sequence_length=cfg["sequence_length"],
             fps=cfg["synthetic"]["fps"],
+            image_size=img_size,
             mode="trajectory",
         )
 

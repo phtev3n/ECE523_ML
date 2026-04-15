@@ -28,7 +28,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 import argparse
 
 import torch
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import ConcatDataset, DataLoader, random_split
 from tqdm import tqdm
 
 from golf_tracer.data.real_dataset import RealGolfSequenceDataset
@@ -69,18 +69,46 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--dataset_root", default=None)
+    parser.add_argument("--checkpoint", default=None,
+                        help="Path to a pre-trained detector checkpoint to fine-tune from.")
+    parser.add_argument("--save_path", default=None,
+                        help="Override the save_path in the config (useful for fine-tune outputs).")
+    parser.add_argument("--mix_synthetic", action="store_true",
+                        help="When --dataset_root is given, also include synthetic data so the "
+                             "model sees both real appearance and diverse synthetic backgrounds.")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
     set_seed(cfg["seed"])
     device = resolve_device(cfg["device"])
 
+    if args.save_path:
+        cfg["save_path"] = args.save_path
+
     if args.dataset_root:
-        dataset = RealGolfSequenceDataset(
+        real_ds = RealGolfSequenceDataset(
             args.dataset_root,
             sequence_length=cfg["sequence_length"],
             mode="detector",
+            augment=True,
         )
+        print(f"  Real dataset: {len(real_ds)} labelled frames")
+
+        if args.mix_synthetic:
+            # Use a smaller synthetic set — enough to preserve generalisation without
+            # overwhelming the real data.  Aim for roughly 4:1 synthetic:real ratio.
+            n_synth = max(200, len(real_ds) * 4)
+            synth_ds = SyntheticGolfTrajectoryDataset(
+                num_sequences=n_synth,
+                sequence_length=cfg["sequence_length"],
+                image_size=tuple(cfg["image_size"]),
+                fps=cfg["synthetic"]["fps"],
+                mode="detector",
+            )
+            print(f"  Synthetic dataset: {len(synth_ds)} frames (4:1 mix)")
+            dataset = ConcatDataset([real_ds, synth_ds])
+        else:
+            dataset = real_ds
     else:
         dataset = SyntheticGolfTrajectoryDataset(
             num_sequences=cfg["synthetic"]["num_sequences"],
@@ -89,6 +117,8 @@ def main():
             fps=cfg["synthetic"]["fps"],
             mode="detector",
         )
+
+    print(f"  Total dataset size: {len(dataset)} samples")
 
     if len(dataset) < 2:
         raise ValueError("Dataset must contain at least 2 samples for train/val split.")
@@ -120,6 +150,16 @@ def main():
 
     model = MultiScaleBallDetector(cfg["model"]["backbone"]).to(device)
     model.apply(freeze_batchnorm)
+
+    if args.checkpoint:
+        ckpt = torch.load(args.checkpoint, map_location=device)
+        state = ckpt.get("model_state", ckpt)
+        missing, unexpected = model.load_state_dict(state, strict=False)
+        print(f"Loaded checkpoint from {args.checkpoint}")
+        if missing:
+            print(f"  Missing keys: {missing}")
+        if unexpected:
+            print(f"  Unexpected keys: {unexpected}")
 
     opt = torch.optim.Adam(
         [p for p in model.parameters() if p.requires_grad],

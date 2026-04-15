@@ -1,0 +1,52 @@
+[
+  {
+    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9701_7i_2.MOV",
+    "fps": 60.0,
+    "total_frames": 1056,
+    "impact_frame": 583,
+    "audio_candidate": 583,
+    "motion_candidate": 575,
+    "auto_candidate": 583,
+    "user_confirmed": true
+  },
+  {
+    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9702_7i_3.MOV",
+    "fps": 60.0,
+    "total_frames": 1196,
+    "impact_frame": 583,
+    "audio_candidate": 583,
+    "motion_candidate": 522,
+    "auto_candidate": 583,
+    "user_confirmed": true
+  },
+  {
+    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9703_7i_4.MOV",
+    "fps": 60.0,
+    "total_frames": 1117,
+    "impact_frame": 630,
+    "audio_candidate": 630,
+    "motion_candidate": 840,
+    "auto_candidate": 630,
+    "user_confirmed": true
+  },
+  {
+    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9704_7i_5.MOV",
+    "fps": 60.0,
+    "total_frames": 1258,
+    "impact_frame": 734,
+    "audio_candidate": 734,
+    "motion_candidate": 724,
+    "auto_candidate": 734,
+    "user_confirmed": true
+  },
+  {
+    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9707_Dr_1.MOV",
+    "fps": 60.0,
+    "total_frames": 1348,
+    "impact_frame": 802,
+    "audio_candidate": 802,
+    "motion_candidate": 797,
+    "auto_candidate": 802,
+    "user_confirmed": true
+  }
+]

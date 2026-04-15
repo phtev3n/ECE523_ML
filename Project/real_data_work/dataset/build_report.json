@@ -1,0 +1,62 @@
+[
+  {
+    "seq_name": "seq_0000",
+    "num_frames": 24,
+    "reprojection": {
+      "mean_px": 104.61063385009766,
+      "max_px": 195.37677001953125,
+      "n_visible": 24
+    },
+    "mode": "3d",
+    "Cd": 0.4390469793547921,
+    "Cm": 0.0
+  },
+  {
+    "seq_name": "seq_0001",
+    "num_frames": 24,
+    "reprojection": {
+      "mean_px": 77.66606140136719,
+      "max_px": 178.48406982421875,
+      "n_visible": 24
+    },
+    "mode": "3d",
+    "Cd": 0.7999883533339074,
+    "Cm": 0.0
+  },
+  {
+    "seq_name": "seq_0002",
+    "num_frames": 24,
+    "reprojection": {
+      "mean_px": 108.89928436279297,
+      "max_px": 200.00100708007812,
+      "n_visible": 22
+    },
+    "mode": "3d",
+    "Cd": 0.4468673988426475,
+    "Cm": 0.0
+  },
+  {
+    "seq_name": "seq_0003",
+    "num_frames": 24,
+    "reprojection": {
+      "mean_px": 99.33048248291016,
+      "max_px": 156.28309631347656,
+      "n_visible": 24
+    },
+    "mode": "3d",
+    "Cd": 0.42176544683521067,
+    "Cm": 0.0
+  },
+  {
+    "seq_name": "seq_0004",
+    "num_frames": 24,
+    "reprojection": {
+      "mean_px": 71.0194320678711,
+      "max_px": 159.472900390625,
+      "n_visible": 24
+    },
+    "mode": "3d",
+    "Cd": 0.7999283502085538,
+    "Cm": 0.0
+  }
+]

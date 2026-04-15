@@ -1,0 +1,152 @@
+{
+  "method": "exif_estimation",
+  "note": "Intrinsics estimated from EXIF focal length, not checkerboard calibration. Expect ~2-5% error in fx/fy vs a full calibration. Re-run calibrate_camera.py with checkerboard images for higher accuracy.",
+  "native_resolution": {
+    "width": 1280,
+    "height": 720
+  },
+  "native_intrinsics": {
+    "fx": 853.33,
+    "fy": 720.0,
+    "cx": 640.0,
+    "cy": 360.0
+  },
+  "distortion_coefficients": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "pipeline_intrinsics": {
+    "fx": 606.82,
+    "fy": 512.0,
+    "cx": 256.0,
+    "cy": 256.0,
+    "camera_height_m": 0.30,
+    "image_h": 512,
+    "image_w": 512,
+    "_camera_height_note": "0.30m best-fit from frame-0 annotations (6px reproj error vs 22px at 1.4m). Physical camera height TBD — user to measure to middle of iPhone sensor. The discrepancy likely means the camera has a slight downward tilt which reduces the effective projection height below physical height."
+  },
+  "target_size": 512,
+  "f35mm_used": 24.0,
+  "computed_fov": {
+    "hfov_deg": 73.74,
+    "vfov_deg": 53.13
+  },
+  "detected_fps": [
+    30.0,
+    60.0
+  ],
+  "lens_label": null,
+  "per_video": [
+    {
+      "fps": 30.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 30.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 30.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 30.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 60.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 60.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 60.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 60.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    },
+    {
+      "fps": 60.0,
+      "lens_label": null,
+      "f35mm_used": 24.0,
+      "fl_source": "not found",
+      "pipeline_intrinsics": {
+        "fx": 606.82,
+        "fy": 512.0,
+        "cx": 256.0,
+        "cy": 256.0
+      }
+    }
+  ]
+}
