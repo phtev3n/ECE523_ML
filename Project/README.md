@@ -112,7 +112,7 @@ python scripts/train_trajectory.py --config configs/trajectory.yaml --dataset_ro
 
 ### 5. Test full pipeline + render tracer
 ```bash
-python scripts/test_pipeline.py   --config configs/pipeline.yaml   --dataset_root demo_dataset   --detector_ckpt outputs/detector_last.pt   --trajectory_ckpt outputs/trajectory_last.pt   --save_video
+python scripts/test_pipeline.py   --config configs/pipeline.yaml   --dataset_root demo_dataset   --detector_ckpt outputs/detector_best.pt   --trajectory_ckpt outputs/trajectory_best.pt   --save_video
 ```
 
 ## Main outputs

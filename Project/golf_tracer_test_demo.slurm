@@ -17,4 +17,4 @@
 # --------------------
 python --version
 pwd
-python scripts/test_pipeline.py   --config configs/pipeline.yaml   --dataset_root demo_dataset   --detector_ckpt outputs/detector_last.pt   --trajectory_ckpt outputs/trajectory_last.pt   --save_video
+python scripts/test_pipeline.py   --config configs/pipeline.yaml   --dataset_root demo_dataset   --detector_ckpt outputs/detector_best.pt   --trajectory_ckpt outputs/trajectory_best.pt   --save_video

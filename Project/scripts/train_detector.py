@@ -180,7 +180,6 @@ def main():
     best_val = float("inf")
     save_path = Path(cfg["save_path"])
     ensure_dir(save_path.parent)
-    last_path = save_path
     best_path = save_path.with_name(save_path.stem + "_best.pt")
 
     for epoch in range(cfg["epochs"]):
@@ -339,19 +338,17 @@ def main():
             f"lr={opt.param_groups[0]['lr']:.2e}"
         )
 
-        ckpt = {
-            "model_state": model.state_dict(),
-            "optimizer_state": opt.state_dict(),
-            "scheduler_state": scheduler.state_dict(),
-            "config": cfg,
-            "epoch": epoch + 1,
-            "best_val": best_val,
-        }
-
-        torch.save(ckpt, last_path)
+        # Only save best checkpoint to reduce storage
         if val_loss < best_val:
             best_val = val_loss
-            ckpt["best_val"] = best_val
+            ckpt = {
+                "model_state": model.state_dict(),
+                "optimizer_state": opt.state_dict(),
+                "scheduler_state": scheduler.state_dict(),
+                "config": cfg,
+                "epoch": epoch + 1,
+                "best_val": best_val,
+            }
             torch.save(ckpt, best_path)
 
 
