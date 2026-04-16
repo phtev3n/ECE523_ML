@@ -232,15 +232,21 @@ def main():
                 frames_np = np.clip(frames_np, 0.0, 1.0)
                 frames_np = (frames_np * 255.0).astype(np.uint8)
 
+                # First frame from which the Kalman filter was validly seeded.
+                # Points before this index are raw (unsmoothed) detector outputs
+                # on low-confidence frames and must not be drawn as part of the
+                # tracer — they are scattered false positives, not ball positions.
+                kf_start = max(0, result.kf_init_frame)
+
                 vis_frames = []
                 for t, frame in enumerate(frames_np):
                     bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
                     if cfg["render"]["draw_measurements"]:
                         draw_tracer(bgr, result.measured_uv[: t + 1], color=(255, 255, 0), thickness=1)
-                    if cfg["render"]["draw_filtered"]:
+                    if cfg["render"]["draw_filtered"] and t >= kf_start:
                         draw_tracer(
                             bgr,
-                            result.filtered_uv[: t + 1],
+                            result.filtered_uv[kf_start: t + 1],
                             color=(0, 255, 255),
                             thickness=cfg["render"]["tracer_thickness"],
                         )

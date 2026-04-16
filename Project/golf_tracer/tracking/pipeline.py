@@ -33,6 +33,12 @@ class PipelineOutput:
                          values indicate the model lacked sufficient clip
                          length to observe Magnus curvature; the physics
                          fitting fallback should be used instead.
+        kf_init_frame  : Index of the first frame at which the Kalman filter
+                         was seeded by a high-confidence detection.  Filtered
+                         positions before this index are raw (unsmoothed)
+                         detector outputs and should not be drawn as part of
+                         the tracer.  -1 if the filter was never initialised
+                         (no high-confidence detection in the sequence).
     """
     measured_uv:    np.ndarray
     filtered_uv:    np.ndarray
@@ -40,6 +46,7 @@ class PipelineOutput:
     uv_reprojected: np.ndarray
     visible_prob:   np.ndarray
     spin_pred:      np.ndarray   # shape (2,): [backspin_rpm, sidespin_rpm]
+    kf_init_frame:  int = -1     # first frame Kalman was seeded; -1 = never
 
 
 class GolfBallTrackingPipeline:
@@ -246,6 +253,7 @@ class GolfBallTrackingPipeline:
                 measured_uv=uv_arr, filtered_uv=filtered,
                 xyz_pred=xyz, uv_reprojected=uv_rep,
                 visible_prob=vis_arr, spin_pred=spin,
+                kf_init_frame=0,   # GT bypass: all frames valid from the start
             )
 
         elif use_classical:
@@ -302,10 +310,26 @@ class GolfBallTrackingPipeline:
         # ---- Stage 2: Kalman filtering ----
         kf = Kalman2D(**self.config["kalman"])
         filtered = []
+        kf_init_frame = -1   # first frame where Kalman was seeded
+
+        # Minimum confidence required to seed the filter.  Initialising on the
+        # first frame unconditionally causes divergence when the first detection
+        # is a false positive (e.g. detector locks onto a static background
+        # region before the ball enters the frame).  Waiting for a genuinely
+        # high-confidence detection prevents the filter from being seeded at
+        # the wrong position and coasting away from the true ball trajectory.
+        vis_init_threshold = float(
+            self.config.get("tracking", {}).get("vis_init_threshold", 0.5)
+        )
 
         for i, uv in enumerate(detector_uv):
             if not kf.initialized:
-                kf.init(uv)
+                if visible_prob[i] >= vis_init_threshold:
+                    kf.init(uv)
+                    kf_init_frame = i
+                # Output the raw detection regardless — the filtered track
+                # will match the measurement until the filter is seeded, which
+                # is better than outputting a stale/wrong initialisation.
                 filtered.append(uv.copy())
                 continue
 
@@ -365,6 +389,16 @@ class GolfBallTrackingPipeline:
         traj_pred   = self.trajectory_model(traj_tensor)
         xyz = traj_pred["xyz"][0].detach().cpu().numpy()   # (T, 3)
 
+        # Apply physical plausibility constraints to the LSTM output.
+        # The below_ground_loss penalises y < 0 during training but does not
+        # guarantee it at inference (especially on out-of-distribution inputs).
+        # Clamping here prevents downstream metric extrapolation (carry, apex,
+        # ToF) from producing nonsensical results when the model mispredicts.
+        #   y (height above ground) : must be >= 0
+        #   z (depth, camera-forward): must be positive (ball in front of camera)
+        xyz[:, 1] = np.clip(xyz[:, 1], 0.0, None)
+        xyz[:, 2] = np.clip(xyz[:, 2], 0.1, None)
+
         # Extract spin from spin_head; fall back to zeros for old checkpoints
         # that predate the spin_head addition (they won't have "spin" in output)
         if "spin" in traj_pred:
@@ -382,4 +416,5 @@ class GolfBallTrackingPipeline:
             uv_reprojected=uv_rep,
             visible_prob=visible_prob,
             spin_pred=spin,
+            kf_init_frame=kf_init_frame,
         )

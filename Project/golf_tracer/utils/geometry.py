@@ -111,6 +111,20 @@ def compute_ball_metrics(xyz_pred: np.ndarray, fps: float) -> dict:
     vx0, vy0, vz0 = float(v0[0]), float(v0[1]), float(v0[2])
 
     speed   = math.sqrt(vx0 ** 2 + vy0 ** 2 + vz0 ** 2)
+
+    # Physical plausibility guard: fastest recorded golf ball speed is ~91 m/s
+    # (203 mph, long-drive competition).  LSTM predictions on out-of-distribution
+    # shots can yield unrealistic velocities (e.g. 150 m/s), which causes carry
+    # extrapolation to produce physically impossible distances (~500 m+).
+    # Scale the full velocity vector proportionally so the direction is preserved.
+    MAX_BALL_SPEED_MS = 91.0
+    if speed > MAX_BALL_SPEED_MS:
+        scale = MAX_BALL_SPEED_MS / speed
+        vx0  *= scale
+        vy0  *= scale
+        vz0  *= scale
+        speed = MAX_BALL_SPEED_MS
+
     horiz0  = math.sqrt(vx0 ** 2 + vz0 ** 2)   # horizontal component of speed
 
     # Launch angle: elevation above horizontal

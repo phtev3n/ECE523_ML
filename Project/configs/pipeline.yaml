@@ -13,12 +13,21 @@ kalman:
   gate_sigma: 5.0
 render:
   tracer_thickness: 2
-  draw_measurements: true
+  # Disable raw measurements: on low-visibility frames the detector fires at
+  # background regions (corners, edges), drawing errant lines across the frame.
+  draw_measurements: false
   draw_filtered: true
-  draw_reprojected: true
+  # Disable reprojected: the 3D-to-2D reproject is 10–20 px offset from the
+  # actual ball due to accumulated LSTM error — it creates a confusing second
+  # arc alongside the Kalman-filtered tracer.
+  draw_reprojected: false
   draw_metrics: true
 tracking:
   visibility_threshold: 0.35
+  # Minimum visibility confidence required to seed the Kalman filter.
+  # Higher than vis_threshold because an incorrect seed position causes the
+  # filter to coast away from the true ball; a missed seed is recoverable.
+  vis_init_threshold: 0.5
   force_measurement_update: false
   # Apply frame-difference motion mask to heatmap before peak decoding.
   # Suppresses detections on static scene regions (e.g. golfer standing still

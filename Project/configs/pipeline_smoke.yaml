@@ -8,10 +8,27 @@ kalman:
   max_coast_frames: 8
   meas_var: 4.0
   process_var: 15.0
+  # Mahalanobis gate: reject measurements > 3-sigma from predicted position.
+  # Prevents false-positive detections (e.g. background lock-on before ball
+  # enters frame) from corrupting the Kalman state.
+  gate_sigma: 3.0
 max_test_sequences: 2
 render:
   draw_filtered: true
-  draw_measurements: true
-  draw_reprojected: true
+  # Disable raw measurements: on low-visibility frames the detector fires at
+  # background regions (corners, edges), drawing errant lines across the frame.
+  draw_measurements: false
+  # Disable reprojected: the 3D-to-2D reproject is 10–20 px offset from the
+  # actual ball due to accumulated LSTM error — it creates a confusing second
+  # arc alongside the Kalman-filtered tracer.
+  draw_reprojected: false
   tracer_thickness: 2
 sequence_length: 12
+tracking:
+  visibility_threshold: 0.35
+  # Minimum visibility confidence required to seed the Kalman filter.
+  # Higher than vis_threshold because an incorrect seed position causes the
+  # filter to coast away from the true ball; a missed seed is recoverable.
+  vis_init_threshold: 0.5
+  force_measurement_update: false
+  motion_gate: true
