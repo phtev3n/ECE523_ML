@@ -8,10 +8,12 @@ kalman:
   max_coast_frames: 8
   meas_var: 4.0
   process_var: 15.0
-  # Mahalanobis gate: reject measurements > 3-sigma from predicted position.
-  # Prevents false-positive detections (e.g. background lock-on before ball
-  # enters frame) from corrupting the Kalman state.
-  gate_sigma: 3.0
+  # Gate disabled: with process_var=15 the innovation covariance S≈29 px²,
+  # which causes the Mahalanobis gate to reject legitimate ball detections
+  # whenever the ball moves >~16 px between frames (common at early flight).
+  # The vis_init_threshold guard already prevents false-positive seeding, which
+  # was the original motivation for adding the gate here.
+  gate_sigma: 0.0
 max_test_sequences: 2
 render:
   draw_filtered: true
