@@ -1,0 +1,21 @@
+{
+  "rmse_2d_measured": 223.14042154947916,
+  "rmse_2d_filtered": 222.9117906358507,
+  "rmse_3d": 8.164747873942057,
+  "visibility_f1": 0.9903381642512077,
+  "smoothness_filtered": 64.48355695936415,
+  "carry_err_m": 18.50121681277208,
+  "apex_err_m": 5.190750275842017,
+  "visible_prob_mean": 1.0,
+  "visible_prob_max": 1.0,
+  "gt_visible_rate": 0.9814814858966403,
+  "ball_launch_angle_deg": 13.233333333333334,
+  "ball_launch_direction_deg": 2.7888888888888888,
+  "ball_ball_speed_ms": 69.88888888888889,
+  "ball_carry_m": 214.2444444444444,
+  "ball_apex_m": 13.458888888888888,
+  "ball_descent_angle_deg": 13.588888888888889,
+  "ball_time_of_flight_s": 3.1655555555555557,
+  "spin_backspin_rpm": 0.0,
+  "spin_sidespin_rpm": 0.0
+}
