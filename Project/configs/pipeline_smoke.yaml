@@ -14,7 +14,7 @@ kalman:
   # The vis_init_threshold guard already prevents false-positive seeding, which
   # was the original motivation for adding the gate here.
   gate_sigma: 0.0
-max_test_sequences: 2
+max_test_sequences: 20
 render:
   draw_filtered: true
   # Disable raw measurements: on low-visibility frames the detector fires at
