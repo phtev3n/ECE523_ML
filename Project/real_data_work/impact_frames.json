@@ -48,5 +48,135 @@
     "motion_candidate": 797,
     "auto_candidate": 802,
     "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9737_pw1.MOV",
+    "fps": 60.0,
+    "total_frames": 1044,
+    "impact_frame": 611,
+    "audio_candidate": 612,
+    "motion_candidate": 600,
+    "auto_candidate": 612,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9739_pw2.MOV",
+    "fps": 60.0,
+    "total_frames": 975,
+    "impact_frame": 831,
+    "audio_candidate": 831,
+    "motion_candidate": 637,
+    "auto_candidate": 831,
+    "user_confirmed": false
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9740_pw3.MOV",
+    "fps": 60.0,
+    "total_frames": 1094,
+    "impact_frame": 685,
+    "audio_candidate": 685,
+    "motion_candidate": 677,
+    "auto_candidate": 685,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9742_pw4.MOV",
+    "fps": 60.0,
+    "total_frames": 999,
+    "impact_frame": 613,
+    "audio_candidate": 614,
+    "motion_candidate": 606,
+    "auto_candidate": 614,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9743_pw5.MOV",
+    "fps": 60.0,
+    "total_frames": 1057,
+    "impact_frame": 501,
+    "audio_candidate": 501,
+    "motion_candidate": 492,
+    "auto_candidate": 501,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9744_7i_1.MOV",
+    "fps": 60.0,
+    "total_frames": 994,
+    "impact_frame": 529,
+    "audio_candidate": 529,
+    "motion_candidate": 520,
+    "auto_candidate": 529,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9745_7i_2.MOV",
+    "fps": 60.0,
+    "total_frames": 1111,
+    "impact_frame": 505,
+    "audio_candidate": 505,
+    "motion_candidate": 496,
+    "auto_candidate": 505,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9746_7i_3.MOV",
+    "fps": 60.0,
+    "total_frames": 1245,
+    "impact_frame": 734,
+    "audio_candidate": 734,
+    "motion_candidate": 724,
+    "auto_candidate": 734,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9747_7i_4.MOV",
+    "fps": 60.0,
+    "total_frames": 1037,
+    "impact_frame": 576,
+    "audio_candidate": 577,
+    "motion_candidate": 567,
+    "auto_candidate": 577,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9748_7i_5.MOV",
+    "fps": 60.0,
+    "total_frames": 1009,
+    "impact_frame": 601,
+    "audio_candidate": 602,
+    "motion_candidate": 594,
+    "auto_candidate": 602,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9749_Dr_1.MOV",
+    "fps": 60.0,
+    "total_frames": 2722,
+    "impact_frame": 679,
+    "audio_candidate": 680,
+    "motion_candidate": 1658,
+    "auto_candidate": 680,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9757_Dr_2.MOV",
+    "fps": 60.0,
+    "total_frames": 1171,
+    "impact_frame": 673,
+    "audio_candidate": 673,
+    "motion_candidate": 668,
+    "auto_candidate": 673,
+    "user_confirmed": true
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9758_Dr_3.MOV",
+    "fps": 60.0,
+    "total_frames": 1438,
+    "impact_frame": 869,
+    "audio_candidate": 869,
+    "motion_candidate": 809,
+    "auto_candidate": 869,
+    "user_confirmed": true
   }
 ]

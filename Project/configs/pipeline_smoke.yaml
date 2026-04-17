@@ -34,3 +34,4 @@ tracking:
   vis_init_threshold: 0.5
   force_measurement_update: false
   motion_gate: true
+  motion_gate_blur_sigma: 4.0   # scaled for 256×256 (half of 8.0 at 512×512)

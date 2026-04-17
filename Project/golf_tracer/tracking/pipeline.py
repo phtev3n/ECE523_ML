@@ -274,8 +274,32 @@ class GolfBallTrackingPipeline:
                 if use_motion_gate and t > 0:
                     prev = frames_tensor[t - 1 : t].to(self.device)
                     diff = (frame - prev).abs().mean(dim=1, keepdim=True)
+
+                    # Small-scale motion gate: isolate high-spatial-frequency
+                    # changes (small fast objects like the ball) and suppress
+                    # low-frequency changes (the golfer's body sweeping through
+                    # the frame).  A Laplacian acts as a high-pass filter —
+                    # subtracting a blurred copy leaves only fine-scale detail.
+                    # The golfer creates large diffuse blobs in the diff image;
+                    # the ball creates a sharp, localised spike.  After
+                    # high-passing, the ball spike survives while the golfer blob
+                    # is removed, so the gate amplifies the ball region rather
+                    # than the golfer.
+                    blur_sigma = float(self.config.get("tracking", {}).get(
+                        "motion_gate_blur_sigma", 8.0
+                    ))
+                    # Approximate Gaussian blur via repeated avg-pool passes
+                    k = max(3, int(blur_sigma * 2) | 1)   # odd kernel size
+                    pad = k // 2
+                    diff_blur = F.avg_pool2d(
+                        F.pad(diff, [pad, pad, pad, pad], mode="reflect"),
+                        kernel_size=k, stride=1,
+                    )
+                    # High-pass: sharp local changes minus blurred background
+                    diff_hp = (diff - diff_blur).clamp(min=0.0)
+
                     diff_small = F.interpolate(
-                        diff, size=(hm_h, hm_w), mode="bilinear", align_corners=False
+                        diff_hp, size=(hm_h, hm_w), mode="bilinear", align_corners=False
                     )
                     diff_norm = diff_small / (diff_small.amax(dim=(-2, -1), keepdim=True) + 1e-6)
                     gated_heatmap = pred["heatmap"] * (0.2 + 0.8 * diff_norm)

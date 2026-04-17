@@ -23,6 +23,24 @@ import cv2
 import numpy as np
 
 
+def _imread_any(path: Path) -> np.ndarray | None:
+    """Read an image regardless of format, with HEIC support via pillow-heif."""
+    img = cv2.imread(str(path))
+    if img is not None:
+        return img
+    # cv2 cannot read HEIC — try pillow-heif as a fallback
+    try:
+        from PIL import Image
+        import pillow_heif
+        pillow_heif.register_heif_opener()
+        pil = Image.open(path).convert("RGB")
+        arr = np.array(pil)
+        return cv2.cvtColor(arr, cv2.COLOR_RGB2BGR)
+    except Exception as e:
+        print(f"  could not read {path.name}: {e}")
+        return None
+
+
 def find_corners(image_paths: list[Path], pattern_size: tuple[int, int], square_mm: float):
     """Detect checkerboard corners in a set of images."""
     obj_point = np.zeros((pattern_size[0] * pattern_size[1], 3), np.float32)
@@ -33,7 +51,7 @@ def find_corners(image_paths: list[Path], pattern_size: tuple[int, int], square_
     img_size = None
 
     for p in image_paths:
-        img = cv2.imread(str(p))
+        img = _imread_any(p)
         if img is None:
             print(f"  skipping unreadable: {p.name}")
             continue
@@ -94,7 +112,7 @@ def main() -> None:
 
     image_paths = sorted(
         p for p in image_dir.iterdir()
-        if p.suffix.lower() in {".png", ".jpg", ".jpeg", ".bmp", ".tiff"}
+        if p.suffix.lower() in {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".heic", ".heif"}
     )
     if len(image_paths) < 3:
         sys.exit(f"Need at least 3 checkerboard images, found {len(image_paths)}")

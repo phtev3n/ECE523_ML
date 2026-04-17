@@ -33,3 +33,8 @@ tracking:
   # Suppresses detections on static scene regions (e.g. golfer standing still
   # after impact).  Disable only if camera is not static.
   motion_gate: true
+  # Gaussian blur radius (pixels) used to separate small-scale ball motion
+  # from large-scale golfer body motion in the high-pass motion gate.
+  # Larger = more aggressive golfer suppression; smaller = less filtering.
+  # Rule of thumb: set to roughly half the expected golfer body width in pixels.
+  motion_gate_blur_sigma: 8.0
