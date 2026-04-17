@@ -1,37 +1,93 @@
 [
   {
-    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9701_7i_2.MOV",
-    "impact_frame": 583,
-    "frames_dir": "real_data_work\\shots\\IMG_9701_7i_2\\frames",
-    "annotations_2d": "real_data_work\\shots\\IMG_9701_7i_2\\annotations_2d.json",
+    "video": "real_video_data\\60fps\\IMG_9737_pw1.MOV",
+    "impact_frame": 611,
+    "frames_dir": "real_data_work\\shots\\IMG_9737_pw1\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9737_pw1\\annotations_2d.json",
     "trajectory_index": 0
   },
   {
-    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9702_7i_3.MOV",
-    "impact_frame": 583,
-    "frames_dir": "real_data_work\\shots\\IMG_9702_7i_3\\frames",
-    "annotations_2d": "real_data_work\\shots\\IMG_9702_7i_3\\annotations_2d.json",
+    "video": "real_video_data\\60fps\\IMG_9739_pw2.MOV",
+    "impact_frame": 831,
+    "frames_dir": "real_data_work\\shots\\IMG_9739_pw2\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9739_pw2\\annotations_2d.json",
     "trajectory_index": 1
   },
   {
-    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9703_7i_4.MOV",
-    "impact_frame": 630,
-    "frames_dir": "real_data_work\\shots\\IMG_9703_7i_4\\frames",
-    "annotations_2d": "real_data_work\\shots\\IMG_9703_7i_4\\annotations_2d.json",
+    "video": "real_video_data\\60fps\\IMG_9740_pw3.MOV",
+    "impact_frame": 685,
+    "frames_dir": "real_data_work\\shots\\IMG_9740_pw3\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9740_pw3\\annotations_2d.json",
     "trajectory_index": 2
   },
   {
-    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9704_7i_5.MOV",
-    "impact_frame": 734,
-    "frames_dir": "real_data_work\\shots\\IMG_9704_7i_5\\frames",
-    "annotations_2d": "real_data_work\\shots\\IMG_9704_7i_5\\annotations_2d.json",
+    "video": "real_video_data\\60fps\\IMG_9742_pw4.MOV",
+    "impact_frame": 613,
+    "frames_dir": "real_data_work\\shots\\IMG_9742_pw4\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9742_pw4\\annotations_2d.json",
     "trajectory_index": 3
   },
   {
-    "video": "C:\\Users\\brian\\Documents\\repos\\ECE523_ML\\Project\\real_video_data\\60fps\\IMG_9707_Dr_1.MOV",
-    "impact_frame": 802,
-    "frames_dir": "real_data_work\\shots\\IMG_9707_Dr_1\\frames",
-    "annotations_2d": "real_data_work\\shots\\IMG_9707_Dr_1\\annotations_2d.json",
+    "video": "real_video_data\\60fps\\IMG_9743_pw5.MOV",
+    "impact_frame": 501,
+    "frames_dir": "real_data_work\\shots\\IMG_9743_pw5\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9743_pw5\\annotations_2d.json",
     "trajectory_index": 4
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9744_7i_1.MOV",
+    "impact_frame": 529,
+    "frames_dir": "real_data_work\\shots\\IMG_9744_7i_1\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9744_7i_1\\annotations_2d.json",
+    "trajectory_index": 5
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9745_7i_2.MOV",
+    "impact_frame": 505,
+    "frames_dir": "real_data_work\\shots\\IMG_9745_7i_2\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9745_7i_2\\annotations_2d.json",
+    "trajectory_index": 6
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9746_7i_3.MOV",
+    "impact_frame": 734,
+    "frames_dir": "real_data_work\\shots\\IMG_9746_7i_3\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9746_7i_3\\annotations_2d.json",
+    "trajectory_index": 7
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9747_7i_4.MOV",
+    "impact_frame": 576,
+    "frames_dir": "real_data_work\\shots\\IMG_9747_7i_4\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9747_7i_4\\annotations_2d.json",
+    "trajectory_index": 8
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9748_7i_5.MOV",
+    "impact_frame": 601,
+    "frames_dir": "real_data_work\\shots\\IMG_9748_7i_5\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9748_7i_5\\annotations_2d.json",
+    "trajectory_index": 9
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9749_Dr_1.MOV",
+    "impact_frame": 679,
+    "frames_dir": "real_data_work\\shots\\IMG_9749_Dr_1\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9749_Dr_1\\annotations_2d.json",
+    "trajectory_index": 10
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9757_Dr_2.MOV",
+    "impact_frame": 673,
+    "frames_dir": "real_data_work\\shots\\IMG_9757_Dr_2\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9757_Dr_2\\annotations_2d.json",
+    "trajectory_index": 11
+  },
+  {
+    "video": "real_video_data\\60fps\\IMG_9758_Dr_3.MOV",
+    "impact_frame": 869,
+    "frames_dir": "real_data_work\\shots\\IMG_9758_Dr_3\\frames",
+    "annotations_2d": "real_data_work\\shots\\IMG_9758_Dr_3\\annotations_2d.json",
+    "trajectory_index": 12
   }
 ]

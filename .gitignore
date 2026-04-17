@@ -10,8 +10,8 @@ data/
 #!Project/outputs/.gitkeep
 
 # Demo/real dataset frames (regenerate with make_demo_data.py)
-Project/demo_dataset/
-Project/real_dataset/
+!Project/demo_dataset/
+!Project/real_dataset/
 
 # Slurm logs
 *.out
