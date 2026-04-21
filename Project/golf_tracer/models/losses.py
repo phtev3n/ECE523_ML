@@ -30,7 +30,7 @@ def detector_losses(pred: dict, target: dict, weights: dict) -> dict:
         Only active when 'log_var' is present in pred (it always is for
         MultiScaleBallDetector) and weighted by 'uncertainty_weight' in config.
     """
-    heatmap_pred  = pred["heatmap"]
+    heatmap_logit = pred["heatmap_logit"]   # raw pre-sigmoid logit
     offset_pred   = pred["offset"]
     visible_logit = pred["visible_logit"]
 
@@ -38,9 +38,11 @@ def detector_losses(pred: dict, target: dict, weights: dict) -> dict:
     offset_tgt  = target["offset"]
     visible_tgt = target["visible"].float().view_as(visible_logit)
 
-    # heatmap_pred is already a sigmoid probability (applied in detector.forward),
-    # so use plain BCE — not bce_with_logits which would apply sigmoid a second time.
-    heatmap_loss = F.binary_cross_entropy(heatmap_pred, heatmap_tgt)
+    # bce_with_logits: numerically stable, AMP-safe, and correct because
+    # heatmap_logit is the raw pre-sigmoid output (no double-sigmoid).
+    heatmap_loss = F.binary_cross_entropy_with_logits(heatmap_logit, heatmap_tgt)
+    # Probability map needed for the offset mask — apply sigmoid once here.
+    heatmap_pred = torch.sigmoid(heatmap_logit)
 
     # Mask offset loss to cells inside the Gaussian blob only
     pos_mask   = (heatmap_tgt > 0.1).float()

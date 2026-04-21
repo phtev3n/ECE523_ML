@@ -269,6 +269,9 @@ class GolfBallTrackingPipeline:
                 frame = frames_tensor[t : t + 1].to(self.device)
                 pred  = self.detector(frame)
 
+                # Detector now returns raw logits; convert to probabilities here.
+                pred["heatmap"] = torch.sigmoid(pred["heatmap_logit"])
+
                 hm_h, hm_w = pred["heatmap"].shape[-2:]
 
                 if use_motion_gate and t > 0:

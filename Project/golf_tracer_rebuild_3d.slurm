@@ -3,7 +3,7 @@
 ### Directives Section
 # --------------------
 #SBATCH --job-name=golf_tracer_rebuild_3d
-#SBATCH --mem-per-cpu=4GB
+#SBATCH --mem-per-cpu=8GB
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --account=ece523-2026sp

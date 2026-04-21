@@ -68,6 +68,7 @@ class RealGolfSequenceDataset(Dataset):
         detector_scale: float = 0.25,
         detector_sigma: float = 2.0,
         augment: bool = False,
+        load_frames: bool = True,
     ):
         self.dataset_root = Path(dataset_root)
         self.sequence_length = sequence_length
@@ -75,6 +76,10 @@ class RealGolfSequenceDataset(Dataset):
         self.detector_scale = detector_scale
         self.detector_sigma = detector_sigma
         self.augment = augment
+        # In trajectory mode the LSTM only needs UV features, not pixel data.
+        # Setting load_frames=False skips disk I/O for 24×H×W images per sequence
+        # (~94 MB each at 512×512), which prevents OOM on HPC nodes.
+        self.load_frames = load_frames if mode == "trajectory" else True
         self.sequences = sorted([p for p in self.dataset_root.iterdir() if p.is_dir()])
 
         # In detector mode pre-build an index of (seq_dir, frame_meta) pairs
@@ -112,19 +117,23 @@ class RealGolfSequenceDataset(Dataset):
         visible = []
 
         for item in frames_meta:
-            img_path = seq_dir / "frames" / f"{item['frame_index']:06d}.png"
-            img = cv2.imread(str(img_path))
-            if img is None:
-                raise FileNotFoundError(f"Could not read frame: {img_path}")
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            if self.load_frames:
+                img_path = seq_dir / "frames" / f"{item['frame_index']:06d}.png"
+                img = cv2.imread(str(img_path))
+                if img is None:
+                    raise FileNotFoundError(f"Could not read frame: {img_path}")
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                frames.append(img)
 
-            frames.append(img)
             uv.append(item["uv"])
             xyz.append(item.get("xyz", [0.0, 0.0, 0.0]))
             visible.append(float(item["visible"]))
 
-        frames = np.asarray(frames, dtype=np.float32) / 255.0
-        frames_t = torch.from_numpy(frames).permute(0, 3, 1, 2).contiguous()
+        if self.load_frames:
+            frames_arr = np.asarray(frames, dtype=np.float32) / 255.0
+            frames_t = torch.from_numpy(frames_arr).permute(0, 3, 1, 2).contiguous()
+        else:
+            frames_t = torch.empty(0)
         uv_t = torch.tensor(uv, dtype=torch.float32)
         xyz_t = torch.tensor(xyz, dtype=torch.float32)
         visible_t = torch.tensor(visible, dtype=torch.float32)
@@ -193,8 +202,7 @@ class RealGolfSequenceDataset(Dataset):
 
         seq_dir = self.sequences[idx]
         meta, frames_t, uv_t, xyz_t, visible_t, eot, features = self._load_sequence(seq_dir)
-        return {
-            "frames": frames_t,
+        out = {
             "uv": uv_t,
             "xyz": xyz_t,
             "visible": visible_t,
@@ -203,3 +211,6 @@ class RealGolfSequenceDataset(Dataset):
             "camera": meta["camera"],
             "fps": float(meta.get("fps", 30.0)),
         }
+        if self.load_frames:
+            out["frames"] = frames_t
+        return out

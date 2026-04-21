@@ -71,6 +71,7 @@ def main():
             args.dataset_root,
             sequence_length=cfg["sequence_length"],
             mode="trajectory",
+            load_frames=False,   # LSTM uses only UV features, not pixel data
         )
     else:
         img_size = tuple(cfg.get("image_size", [256, 256]))

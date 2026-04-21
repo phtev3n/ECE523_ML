@@ -138,7 +138,9 @@ class MultiScaleBallDetector(nn.Module):
         f = self.smooth(p1)
 
         return {
-            "heatmap":       torch.sigmoid(self.head_heatmap(f)),
+            # Raw logit (pre-sigmoid) so bce_with_logits can be used safely under
+            # AMP autocast.  Callers that need probabilities must apply sigmoid themselves.
+            "heatmap_logit": self.head_heatmap(f),
             "offset":        self.head_offset(f),
             "log_var":       self.head_log_var(f),
             "visible_logit": self.head_visible(f),
