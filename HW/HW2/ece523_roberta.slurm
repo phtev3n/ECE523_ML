@@ -9,7 +9,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --account=ece523-2026sp
 #SBATCH --partition=gpu_standard
-#SBATCH --time=01:00:00
+#SBATCH --time=04:00:00
 
 # --------------------
 ### Code Section
