@@ -51,6 +51,111 @@ def gaussian_2d(h: int, w: int, cx: float, cy: float, sigma: float) -> np.ndarra
     return g.astype(np.float32)
 
 
+def _draw_golfer(img: np.ndarray, h: int, w: int, horizon: int) -> None:
+    """Render a randomised golfer silhouette as a foreground distractor.
+
+    The golfer is placed on the left or right side of the frame (matching real
+    recordings where the golfer stands beside the ball).  All body parts are
+    approximate rectangles/ellipses — enough realism that the detector learns
+    "large skin/clothing region ≠ ball" without needing photorealistic rendering.
+
+    The golfer appears in ~70 % of synthetic frames so the model learns to
+    suppress it as a background distractor rather than memorising its absence.
+    """
+    # Randomise golfer placement: left third or right third of frame
+    side = random.choice(["left", "right"])
+    if side == "left":
+        torso_cx = int(w * random.uniform(0.05, 0.30))
+    else:
+        torso_cx = int(w * random.uniform(0.70, 0.95))
+
+    # Golfer height scales with image size; feet rest on ground (bottom of frame)
+    golfer_h = int(h * random.uniform(0.45, 0.70))
+    feet_y   = h - random.randint(0, int(h * 0.08))       # near bottom
+    head_y   = feet_y - golfer_h
+
+    # ---- Clothing / skin colour palettes ----
+    shirt_col  = (random.randint(30, 220), random.randint(30, 220), random.randint(30, 220))
+    pant_col   = (random.randint(20, 180), random.randint(20, 180), random.randint(20, 180))
+    shoe_col   = (random.randint(10,  80), random.randint(10,  80), random.randint(10,  80))
+    skin_col   = (
+        random.randint(100, 200),   # B
+        random.randint( 80, 160),   # G
+        random.randint( 60, 130),   # R  — covers a range of skin tones
+    )
+
+    torso_w = max(10, int(w * random.uniform(0.06, 0.12)))
+    torso_h = int(golfer_h * 0.38)
+    leg_h   = int(golfer_h * 0.42)
+    head_r  = max(4, int(golfer_h * 0.10))
+
+    # Torso (shirt)
+    torso_top = head_y + head_r * 2
+    cv2.rectangle(img,
+                  (torso_cx - torso_w // 2, torso_top),
+                  (torso_cx + torso_w // 2, torso_top + torso_h),
+                  shirt_col, -1)
+
+    # Head (skin-coloured circle)
+    cv2.circle(img, (torso_cx, head_y + head_r), head_r, skin_col, -1)
+
+    # Arms: two thin rectangles angled slightly
+    arm_w = max(3, torso_w // 4)
+    arm_h = int(torso_h * 0.85)
+    # Left arm
+    lax = torso_cx - torso_w // 2 - arm_w
+    cv2.rectangle(img, (lax, torso_top + 4), (lax + arm_w, torso_top + arm_h), shirt_col, -1)
+    # Right arm
+    rax = torso_cx + torso_w // 2
+    cv2.rectangle(img, (rax, torso_top + 4), (rax + arm_w, torso_top + arm_h), shirt_col, -1)
+
+    # Legs (trousers) — two rectangles below torso
+    leg_top = torso_top + torso_h
+    leg_w   = max(4, torso_w // 3)
+    gap     = max(2, torso_w // 8)
+    # Left leg
+    cv2.rectangle(img,
+                  (torso_cx - gap - leg_w, leg_top),
+                  (torso_cx - gap, leg_top + leg_h),
+                  pant_col, -1)
+    # Right leg
+    cv2.rectangle(img,
+                  (torso_cx + gap, leg_top),
+                  (torso_cx + gap + leg_w, leg_top + leg_h),
+                  pant_col, -1)
+
+    # Shoes: dark rectangles at the bottom of each leg, wider and shorter than the leg
+    shoe_h = max(3, int(golfer_h * 0.06))
+    shoe_w = max(6, int(leg_w * 1.6))
+    shoe_top = leg_top + leg_h
+    # Left shoe
+    cv2.rectangle(img,
+                  (torso_cx - gap - shoe_w, shoe_top),
+                  (torso_cx - gap + leg_w // 2, shoe_top + shoe_h),
+                  shoe_col, -1)
+    # Right shoe
+    cv2.rectangle(img,
+                  (torso_cx + gap - leg_w // 2, shoe_top),
+                  (torso_cx + gap + shoe_w, shoe_top + shoe_h),
+                  shoe_col, -1)
+
+    # Golf club: a thin dark line from hands down to ground (approximate address position)
+    # Hands are roughly at the bottom of the torso / top of legs
+    hands_x = torso_cx + (torso_w // 2 if side == "right" else -torso_w // 2)
+    hands_y = leg_top
+    club_tip_x = hands_x + random.randint(-20, 20)
+    club_tip_y = min(h - 1, feet_y + 2)
+    cv2.line(img, (hands_x, hands_y), (club_tip_x, club_tip_y),
+             (30, 30, 30), thickness=random.randint(1, 3))
+
+    # Subtle clothing texture noise on torso
+    mask_ys = slice(max(0, torso_top), min(h, torso_top + torso_h))
+    mask_xs = slice(max(0, torso_cx - torso_w // 2), min(w, torso_cx + torso_w // 2))
+    region = img[mask_ys, mask_xs].astype(np.int16)
+    noise  = np.random.randint(-15, 16, region.shape, dtype=np.int16)
+    img[mask_ys, mask_xs] = np.clip(region + noise, 0, 255).astype(np.uint8)
+
+
 def make_background(h: int, w: int) -> np.ndarray:
     img = np.zeros((h, w, 3), dtype=np.uint8)
 
@@ -113,6 +218,11 @@ def make_background(h: int, w: int) -> np.ndarray:
         shade = random.randint(-28, 12)
         col = tuple(max(0, min(255, c + shade)) for c in grass)
         cv2.rectangle(img, (x1, y1), (x2, y2), col, -1)
+
+    # Golfer silhouette: present in 70 % of frames so the detector learns to
+    # suppress the human figure as a distractor rather than detecting it as the ball.
+    if random.random() < 0.70:
+        _draw_golfer(img, h, w, horizon)
 
     return img
 

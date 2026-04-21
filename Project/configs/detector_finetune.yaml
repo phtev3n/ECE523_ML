@@ -19,7 +19,8 @@ synthetic:
 
 model:
   backbone: resnet50
-  heatmap_sigma: 5.0
+  # Reduced from 5.0 to match actual ball size at 1/4 heatmap scale.
+  heatmap_sigma: 2.0
 
 loss:
   heatmap_weight: 1.0

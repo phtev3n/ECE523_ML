@@ -15,9 +15,10 @@ synthetic:
 
 model:
   backbone: resnet50
-  # Larger sigma provides a wider gradient footprint for the sparse ball target,
-  # helping the model learn coarse localisation before fine offset regression.
-  heatmap_sigma: 5.0
+  # sigma=2.0 at 1/4 scale (128px output from 512px input): a golf ball subtends
+  # ~1-5px at the heatmap scale, so a 2px sigma Gaussian matches the actual target
+  # size rather than smearing the loss over a 30px region (sigma=5 was too large).
+  heatmap_sigma: 2.0
 
 loss:
   heatmap_weight: 1.0

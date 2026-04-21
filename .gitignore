@@ -9,9 +9,13 @@ data/
 !Project/outputs/
 #!Project/outputs/.gitkeep
 
-# Demo/real dataset frames (regenerate with make_demo_data.py)
-!Project/demo_dataset/
-!Project/real_dataset/
+# Generated synthetic dataset frames — regenerate on HPC with make_demo_data.py
+# (was accidentally tracked: 12,500 PNG files at 512x512 = significant binary bloat)
+# To untrack existing files: git rm -r --cached Project/demo_dataset/
+Project/demo_dataset/
+# Real dataset: small (13 shots × 24 frames) — keep tracked so annotated data
+# is not lost between HPC runs. Camera params and annotations are also tracked.
+# Note: real_dataset/ was an old path; current path is real_data_work/dataset/
 
 # Slurm logs
 *.out

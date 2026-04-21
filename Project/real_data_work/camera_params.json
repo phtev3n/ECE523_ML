@@ -1,27 +1,29 @@
 {
+  "method": "exif_estimation",
+  "note": "Intrinsics corrected from bad checkerboard calibration. Prior calibration produced cy=92.5 on a 3024-px tall frame (should be ~1512). Values below are derived from EXIF: 24mm focal length on iPhone 15 Pro Max 1x wide camera, centered principal point (cx=W/2, cy=H/2), center-cropped 4032x3024 -> 3024x3024 -> 512x512. Re-run estimate_camera_params.py --target_size 512 against the actual .mov files to verify focal length.",
   "native_resolution": {
     "width": 4032,
     "height": 3024
   },
   "native_intrinsics": {
-    "fx": 8904.541932223465,
-    "fy": 8649.308013311927,
-    "cx": 3098.9958222213054,
-    "cy": 92.49873579231345
+    "fx": 2688.0,
+    "fy": 3024.0,
+    "cx": 2016.0,
+    "cy": 1512.0
   },
-  "distortion_coefficients": [
-    0.21024616809341173,
-    -1.2439673339883777,
-    -0.030412260582672473,
-    0.023926348797491635,
-    6.139102789379084
-  ],
+  "distortion_coefficients": [0.0, 0.0, 0.0, 0.0, 0.0],
   "pipeline_intrinsics": {
-    "fx": 1507.6473112759304,
-    "fy": 1464.4331027829717,
-    "cx": 439.36437201630565,
-    "cy": 15.66116161562979,
+    "fx": 455.0,
+    "fy": 512.0,
+    "cx": 256.0,
+    "cy": 256.0,
     "camera_height_m": 0.9721
   },
-  "target_size": 512
+  "target_size": 512,
+  "f35mm_used": 24.0,
+  "computed_fov": {
+    "hfov_deg": 73.74,
+    "vfov_deg": 53.13
+  },
+  "lens_label": "1x wide (main)"
 }

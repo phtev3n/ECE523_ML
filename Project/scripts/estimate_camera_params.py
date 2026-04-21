@@ -459,7 +459,71 @@ iPhone 15 Pro Max 35mm-equiv focal lengths (use with --f35mm_override if needed)
         "--out", type=str, default="camera_params.json",
         help="Output camera_params.json path",
     )
+    parser.add_argument(
+        "--correct_existing", type=str, default=None,
+        metavar="BAD_PARAMS_JSON",
+        help=(
+            "Read an existing camera_params.json produced by bad checkerboard "
+            "calibration, recompute pipeline_intrinsics with centered cx/cy and "
+            "EXIF-derived focal length, and write corrected output to --out.  "
+            "Pass --f35mm_override if EXIF extraction fails."
+        ),
+    )
     args = parser.parse_args()
+
+    # --- Mode: correct an existing bad calibration ---
+    if args.correct_existing:
+        bad_path = Path(args.correct_existing)
+        if not bad_path.exists():
+            sys.exit(f"Bad calibration file not found: {bad_path}")
+        with open(bad_path) as fh:
+            bad = json.load(fh)
+        native = bad.get("native_resolution", {})
+        width  = int(native.get("width",  4032))
+        height = int(native.get("height", 3024))
+        cam_h  = float(bad.get("pipeline_intrinsics", {}).get("camera_height_m", args.camera_height_m))
+
+        if args.f35mm_override is not None:
+            f35mm = args.f35mm_override
+            fl_src = f"--f35mm_override: {f35mm} mm"
+        else:
+            # Try to read from a video file if supplied
+            if args.video:
+                info = extract_video_info(Path(args.video[0]))
+                f35mm = info["f35mm"] or IPHONE_FALLBACK_FL["iphone_15_pro"]
+                fl_src = info["fl_source"]
+            else:
+                f35mm = IPHONE_FALLBACK_FL["iphone_15_pro"]
+                fl_src = "fallback (iPhone 15 Pro 1x wide)"
+                print(f"  No video supplied; using fallback f35mm={f35mm} mm ({fl_src})")
+
+        r = intrinsics_from_f35mm(f35mm, width, height, args.target_size)
+        r["pipeline_intrinsics"]["camera_height_m"] = cam_h
+        print(f"Correcting {bad_path.name}:")
+        print(f"  f35mm={f35mm} mm  ({fl_src})")
+        print(f"  Old pipeline cx={bad.get('pipeline_intrinsics', {}).get('cx', '?')}  cy={bad.get('pipeline_intrinsics', {}).get('cy', '?')}")
+        print(f"  New pipeline cx={r['pipeline_intrinsics']['cx']}  cy={r['pipeline_intrinsics']['cy']}")
+        output = {
+            "method": "exif_estimation_corrected",
+            "note": (
+                "Intrinsics corrected from bad checkerboard calibration using EXIF focal length. "
+                f"Prior file: {bad_path}. "
+                "Re-run with --video to verify focal length from actual footage."
+            ),
+            "native_resolution":       {"width": width, "height": height},
+            "native_intrinsics":       r["native_intrinsics"],
+            "distortion_coefficients": [0.0, 0.0, 0.0, 0.0, 0.0],
+            "pipeline_intrinsics":     r["pipeline_intrinsics"],
+            "target_size":             args.target_size,
+            "f35mm_used":              f35mm,
+            "computed_fov":            r["computed_fov"],
+        }
+        out_path = Path(args.out)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w") as fh:
+            json.dump(output, fh, indent=2)
+        print(f"Saved corrected intrinsics to {out_path}")
+        return
 
     video_paths = [Path(v) for v in args.video]
     for p in video_paths:

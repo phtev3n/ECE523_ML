@@ -275,33 +275,60 @@ class GolfBallTrackingPipeline:
                     prev = frames_tensor[t - 1 : t].to(self.device)
                     diff = (frame - prev).abs().mean(dim=1, keepdim=True)
 
-                    # Small-scale motion gate: isolate high-spatial-frequency
-                    # changes (small fast objects like the ball) and suppress
-                    # low-frequency changes (the golfer's body sweeping through
-                    # the frame).  A Laplacian acts as a high-pass filter —
-                    # subtracting a blurred copy leaves only fine-scale detail.
-                    # The golfer creates large diffuse blobs in the diff image;
-                    # the ball creates a sharp, localised spike.  After
-                    # high-passing, the ball spike survives while the golfer blob
-                    # is removed, so the gate amplifies the ball region rather
-                    # than the golfer.
+                    # ---- Stage A: high-pass filter (frequency gate) ----
+                    # Subtracting a blurred copy leaves only fine-scale detail.
+                    # The golfer body creates a large low-frequency blob in the
+                    # diff image; the ball creates a sharp high-frequency spike.
                     blur_sigma = float(self.config.get("tracking", {}).get(
                         "motion_gate_blur_sigma", 8.0
                     ))
-                    # Approximate Gaussian blur via repeated avg-pool passes
-                    k = max(3, int(blur_sigma * 2) | 1)   # odd kernel size
+                    k = max(3, int(blur_sigma * 2) | 1)   # odd kernel
                     pad = k // 2
                     diff_blur = F.avg_pool2d(
                         F.pad(diff, [pad, pad, pad, pad], mode="reflect"),
                         kernel_size=k, stride=1,
                     )
-                    # High-pass: sharp local changes minus blurred background
                     diff_hp = (diff - diff_blur).clamp(min=0.0)
 
-                    diff_small = F.interpolate(
+                    # ---- Stage B: blob-size gate (area filter) ----
+                    # After thresholding the high-pass diff, suppress contiguous
+                    # regions larger than a ball-sized area.  The golf club is
+                    # thin but elongated — it passes the frequency gate but has
+                    # a much larger bounding box than the ball.  We dilate and
+                    # erode to find large blobs, then subtract them from the gate.
+                    # Implemented via max-pool (dilation proxy) followed by
+                    # average-pool (area estimator): regions that survive are
+                    # spatially compact (ball-sized).
+                    # Ball diameter at 512px: ~4-20px → at heatmap 1/4 scale: 1-5px
+                    # Club / body blob: >>20px at heatmap scale
+                    gate_cfg = self.config.get("tracking", {})
+                    ball_max_px = int(gate_cfg.get("motion_gate_ball_max_px", 12))
+
+                    diff_small_raw = F.interpolate(
                         diff_hp, size=(hm_h, hm_w), mode="bilinear", align_corners=False
                     )
-                    diff_norm = diff_small / (diff_small.amax(dim=(-2, -1), keepdim=True) + 1e-6)
+                    # Detect large blobs: dilate with max-pool, then check if
+                    # average neighbourhood is also high (large connected region).
+                    large_k = max(3, ball_max_px | 1)
+                    large_pad = large_k // 2
+                    # Max-pool spreads any hot pixel over a ball_max_px window
+                    large_blob = F.max_pool2d(
+                        F.pad(diff_small_raw, [large_pad, large_pad, large_pad, large_pad], mode="reflect"),
+                        kernel_size=large_k, stride=1,
+                    )
+                    # Average within the same window: high avg + high max = large blob
+                    large_avg = F.avg_pool2d(
+                        F.pad(large_blob, [large_pad, large_pad, large_pad, large_pad], mode="reflect"),
+                        kernel_size=large_k, stride=1,
+                    )
+                    # Suppress pixels that belong to large blobs (body/club):
+                    # where both local max and local average are high, that's a
+                    # large region — zero it out.  Small compact objects (ball)
+                    # have high local max but low local average.
+                    size_mask = (large_avg < 0.3 * large_blob + 1e-6).float()
+                    diff_size_gated = diff_small_raw * size_mask
+
+                    diff_norm = diff_size_gated / (diff_size_gated.amax(dim=(-2, -1), keepdim=True) + 1e-6)
                     gated_heatmap = pred["heatmap"] * (0.2 + 0.8 * diff_norm)
                 else:
                     gated_heatmap = pred["heatmap"]

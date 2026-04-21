@@ -38,7 +38,9 @@ def detector_losses(pred: dict, target: dict, weights: dict) -> dict:
     offset_tgt  = target["offset"]
     visible_tgt = target["visible"].float().view_as(visible_logit)
 
-    heatmap_loss = F.binary_cross_entropy_with_logits(heatmap_pred, heatmap_tgt)
+    # heatmap_pred is already a sigmoid probability (applied in detector.forward),
+    # so use plain BCE — not bce_with_logits which would apply sigmoid a second time.
+    heatmap_loss = F.binary_cross_entropy(heatmap_pred, heatmap_tgt)
 
     # Mask offset loss to cells inside the Gaussian blob only
     pos_mask   = (heatmap_tgt > 0.1).float()

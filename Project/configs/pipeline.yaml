@@ -38,3 +38,8 @@ tracking:
   # Larger = more aggressive golfer suppression; smaller = less filtering.
   # Rule of thumb: set to roughly half the expected golfer body width in pixels.
   motion_gate_blur_sigma: 8.0
+  # Maximum heatmap-scale blob diameter (pixels) considered ball-sized.
+  # At 1/4 heatmap scale a 12px ball = 48px in the 512px image.
+  # Regions larger than this (club, body) are suppressed by the size gate.
+  # Decrease to be more aggressive; increase if ball is being over-suppressed.
+  motion_gate_ball_max_px: 12
