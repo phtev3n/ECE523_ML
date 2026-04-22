@@ -11,7 +11,7 @@
 #SBATCH --partition=gpu_standard
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=01:00:00
+#SBATCH --time=08:00:00
 # --------------------
 ### Code Section
 # --------------------

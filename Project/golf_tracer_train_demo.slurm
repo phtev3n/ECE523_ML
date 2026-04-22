@@ -9,7 +9,7 @@
 #SBATCH --ntasks=1
 #SBATCH --account=ece523-2026sp
 #SBATCH --partition=gpu_standard
-#SBATCH --time=08:00:00
+#SBATCH --time=20:00:00
 
 # --------------------
 ### Code Section
@@ -18,36 +18,25 @@
 python --version
 pwd
 
-# ── Step 1: Regenerate demo dataset ──
-# IMPORTANT: The old demo_dataset was at 256×256 with no golfer silhouettes.
-# Fixes applied:
-#   - image_size 512×512 matches detector.yaml and real pipeline resolution.
-#     RealGolfSequenceDataset loads frames at stored resolution with no resize,
-#     so a 256×256 dataset fed into a 512×512 model was a silent size mismatch.
-#   - synthetic_dataset.make_background() now renders a golfer silhouette
-#     (torso/arms/legs/shoes/club) in 70% of frames so the detector learns
-#     to distinguish the ball from the human figure.
-echo "==> Regenerating demo dataset at 512x512 with golfer silhouettes..."
-python scripts/make_demo_data.py \
-    --out_dir        demo_dataset \
-    --num_sequences  500 \
-    --sequence_length 24 \
-    --image_size     512 512
-
-# ── Step 2: Train detector on pre-generated demo dataset ──
-# Uses detector.yaml (image_size 512x512, sigma=2.0, fixed heatmap BCE loss).
-echo "==> Training detector on demo dataset..."
+# ── Step 1: Train detector on pre-generated demo_dataset ──
+# demo_dataset (500 sequences, 512×512, with golfer silhouettes) is already
+# on the HPC from the previous run.  batch_size=16, num_workers=1 per HPC
+# recommendation (system max is 1 worker; also reduces disk-read contention).
+echo "==> Training detector on demo_dataset (batch=16, workers=1)..."
 python scripts/train_detector.py \
     --config       configs/detector.yaml \
     --dataset_root demo_dataset
 
-# ── Step 3: Train trajectory LSTM on pre-generated demo dataset ──
-echo "==> Training trajectory LSTM on demo dataset..."
+# ── Step 2: Train trajectory LSTM on pre-generated demo_dataset ──
+# load_frames=False is set inside train_trajectory.py — only UV/XYZ/visibility
+# are read from annotations.json; no PNG frame files are loaded, so LSTM
+# training has negligible memory and IO overhead.
+echo "==> Training trajectory LSTM on demo_dataset..."
 python scripts/train_trajectory.py \
     --config       configs/trajectory.yaml \
     --dataset_root demo_dataset
 
-# ── Step 4: Smoke-test the full pipeline on demo data ──
+# ── Step 3: Smoke-test the full pipeline ──
 echo "==> Running pipeline smoke test..."
 python scripts/test_pipeline.py \
     --config          configs/pipeline_smoke.yaml \

@@ -9,7 +9,7 @@
 #SBATCH --ntasks=1
 #SBATCH --account=ece523-2026sp
 #SBATCH --partition=gpu_standard
-#SBATCH --time=06:00:00
+#SBATCH --time=20:00:00
 
 # --------------------
 ### Code Section
