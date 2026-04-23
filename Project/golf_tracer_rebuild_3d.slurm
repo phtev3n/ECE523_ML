@@ -7,6 +7,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --account=ece523-2026sp
+#SBATCH --gres=gpu:1
 #SBATCH --partition=gpu_standard
 #SBATCH --time=20:00:00
 
