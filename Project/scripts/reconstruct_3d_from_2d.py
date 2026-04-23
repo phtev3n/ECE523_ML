@@ -97,23 +97,21 @@ def simulate_trajectory(
 
 
 def project_to_2d(xyz: np.ndarray, camera: dict) -> np.ndarray:
-    """Pinhole projection matching golf_tracer convention (rotated frame).
+    """Standard pinhole projection matching frame orientation from extract_frames.py.
 
-    Convention matches frames extracted with --orient 180 (180° rotated pinhole):
-      u_rot = (W-1-cx) - fx*x/z
-      v_rot = (H-1-cy) + fy*(y - cam_h)/z
-    Both u and v increase in the opposite direction from the standard pinhole.
+    Frames are in standard (non-rotated) orientation:
+      u = cx + fx * x / z
+      v = cy + fy * (cam_h - y) / z
+    Rising ball (y increasing) → v decreases (ball moves up in image). ✓
     """
     fx = float(camera["fx"])
     fy = float(camera["fy"])
     cx = float(camera["cx"])
     cy = float(camera["cy"])
     cam_h = float(camera.get("camera_height_m", 0.0))
-    H = float(camera.get("image_h", 512))
-    W = float(camera.get("image_w", 512))
     z = np.clip(xyz[:, 2], 1e-3, None)
-    u = (W - 1 - cx) - fx * xyz[:, 0] / z
-    v = (H - 1 - cy) + fy * (xyz[:, 1] - cam_h) / z
+    u = cx + fx * xyz[:, 0] / z
+    v = cy + fy * (cam_h - xyz[:, 1]) / z
     return np.stack([u, v], axis=1)
 
 

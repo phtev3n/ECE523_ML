@@ -46,7 +46,7 @@ print(f"Reconstructing {len(ann_paths)} shots...")
 cmd = [
     sys.executable, "scripts/reconstruct_3d_from_2d.py",
     "--camera_params",     "real_data_work/camera_params.json",
-    "--camera_distance_m", "3.0",   # typical iPhone-to-ball distance for golf videos
+    "--camera_distance_m", "3.988",  # measured: 13ft 1in horizontal from tripod base to ball
     "--fps",               "60.0",
     "--out",               "real_data_work/trajectories_corrected.json",
 ] + ["--annotations_2d"] + ann_paths
