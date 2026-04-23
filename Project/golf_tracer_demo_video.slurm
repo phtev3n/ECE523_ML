@@ -35,5 +35,15 @@ echo "==> Compiling demo reel..."
 python scripts/compile_demo_reel.py \
     --in_dir outputs/demo_videos
 
-echo "==> Done. Download outputs/demo_videos/demo_reel.mp4"
-echo "    Individual shots also at: outputs/demo_videos/seq_*_overlay.mp4"
+# ── Step 3: Generate trajectory comparison plots (predicted vs GT) ──
+echo "==> Generating trajectory plots for submission..."
+python scripts/plot_trajectories.py \
+    --results_dir  outputs/demo_videos \
+    --dataset_root real_data_work/dataset \
+    --out_dir      outputs/trajectory_plots
+
+echo "==> Done."
+echo "    Demo reel:         outputs/demo_videos/demo_reel.mp4"
+echo "    Individual shots:  outputs/demo_videos/seq_*_overlay.mp4"
+echo "    Trajectory plots:  outputs/trajectory_plots/*.png"
+echo "    Summary grid:      outputs/trajectory_plots/summary_grid.png"
