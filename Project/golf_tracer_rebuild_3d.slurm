@@ -3,12 +3,12 @@
 ### Directives Section
 # --------------------
 #SBATCH --job-name=golf_tracer_rebuild_3d
-#SBATCH --mem-per-cpu=8GB
+#SBATCH --mem-per-cpu=4GB
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --account=ece523-2026sp
 #SBATCH --partition=standard
-#SBATCH --time=01:00:00
+#SBATCH --time=20:00:00
 
 # --------------------
 ### Code Section
@@ -33,7 +33,7 @@ from pathlib import Path
 with open("real_data_work/shot_map.json") as f:
     shot_map = json.load(f)
 
-ann_paths = [entry["annotations_2d"] for entry in shot_map]
+ann_paths = [entry["annotations_2d"].replace("\\", "/") for entry in shot_map]
 missing = [p for p in ann_paths if not Path(p).exists()]
 if missing:
     print(f"WARNING: {len(missing)} annotation files not found:")

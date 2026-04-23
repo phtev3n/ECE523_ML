@@ -60,6 +60,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--dataset_root", default=None)
+    parser.add_argument("--checkpoint", default=None,
+                        help="Pre-trained LSTM checkpoint to fine-tune from.")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -121,6 +123,12 @@ def main():
         hidden_size=cfg["model"]["hidden_size"],
         num_layers=cfg["model"]["num_layers"],
     ).to(device)
+
+    if args.checkpoint:
+        ckpt = torch.load(args.checkpoint, map_location=device)
+        state = ckpt.get("model_state", ckpt)
+        model.load_state_dict(state, strict=False)
+        print(f"[trajectory] Loaded checkpoint: {args.checkpoint}")
 
     opt = torch.optim.Adam(
         model.parameters(),

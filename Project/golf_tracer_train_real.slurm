@@ -27,35 +27,19 @@ python scripts/fix_camera_intrinsics.py \
     --camera_params real_data_work/camera_params.json \
     --dataset_dir   real_data_work/dataset
 
-# ── Step 1: Train detector from scratch on synthetic data (golfer distractors added) ──
-# Uses synthetic_dataset.py with _draw_golfer() — the model now sees golfers
-# in 70% of training frames and must learn to suppress them.
-# Fixed: heatmap BCE double-sigmoid bug, sigma reduced 5.0 → 2.0.
-echo "==> Training detector on synthetic data (golfer-aware)..."
-python scripts/train_detector.py \
-    --config configs/detector.yaml
-
-# ── Step 2: Fine-tune detector on real data (mixed synthetic+real) ──
-# Starting from the synthetic checkpoint so the model retains golfer-suppression
-# knowledge while adapting to real appearance (grass texture, lighting, actual ball).
+# ── Step 1: Fine-tune detector on real data (mixed synthetic+real) ──
+# Starts from outputs/detector_best.pt produced by golf_tracer_train_demo.slurm
+# (golfer-aware synthetic training).  No need to re-run synthetic training here.
 echo "==> Fine-tuning detector on real data..."
 python scripts/train_detector.py \
-    --config configs/detector_finetune.yaml \
+    --config       configs/detector_finetune.yaml \
     --dataset_root real_data_work/dataset \
     --checkpoint   outputs/detector_best.pt \
     --save_path    outputs/detector_finetune.pt \
     --mix_synthetic
 
-# ── Step 3: Train trajectory LSTM on synthetic data ──
-# The synthetic LSTM training uses a camera distribution that now includes
-# the corrected real camera range.  LSTM is not re-trained on real data because
-# XYZ labels are unreliable until reconstruct_3d_from_2d is re-run with
-# corrected intrinsics (done in Step 5).
-echo "==> Training trajectory LSTM on synthetic data..."
-python scripts/train_trajectory.py \
-    --config configs/trajectory.yaml
-
-# ── Step 4: Evaluate corrected pipeline on real data (3 test modes) ──
+# ── Step 2: Evaluate corrected pipeline on real data (3 test modes) ──
+# trajectory_best.pt from golf_tracer_train_demo.slurm is reused directly.
 # Pass 1 — GT UV ceiling: if rmse_3d is still high, the LSTM or intrinsics need work.
 echo "==> Testing: GT UV bypass (LSTM ceiling)..."
 python scripts/test_pipeline.py \
