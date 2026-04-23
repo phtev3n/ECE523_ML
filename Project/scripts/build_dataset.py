@@ -207,6 +207,11 @@ def main() -> None:
     # Load inputs
     with open(args.shot_map) as f:
         shot_map = json.load(f)
+    # Normalize Windows backslash paths so they resolve on Linux
+    for entry in shot_map:
+        for key in ("frames_dir", "annotations_2d", "video"):
+            if key in entry and isinstance(entry[key], str):
+                entry[key] = entry[key].replace("\\", "/")
     trajectories = None
     if args.trajectories is not None:
         with open(args.trajectories) as f:
