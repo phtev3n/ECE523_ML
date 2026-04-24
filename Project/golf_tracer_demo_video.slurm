@@ -42,8 +42,16 @@ python scripts/plot_trajectories.py \
     --dataset_root real_data_work/dataset \
     --out_dir      outputs/trajectory_plots
 
+# ── Step 4: Generate ideal vs pipeline club comparison plots ──
+echo "==> Generating club comparison plots..."
+python scripts/plot_club_comparison.py \
+    --results_dir outputs/demo_videos \
+    --out_dir     outputs/trajectory_plots
+
 echo "==> Done."
-echo "    Demo reel:         outputs/demo_videos/demo_reel.mp4"
-echo "    Individual shots:  outputs/demo_videos/seq_*_overlay.mp4"
-echo "    Trajectory plots:  outputs/trajectory_plots/*.png"
-echo "    Summary grid:      outputs/trajectory_plots/summary_grid.png"
+echo "    Demo reel:              outputs/demo_videos/demo_reel.mp4"
+echo "    Individual shots:       outputs/demo_videos/seq_*_overlay.mp4"
+echo "    Per-shot plots:         outputs/trajectory_plots/seq_*_trajectory.png"
+echo "    Summary grid:           outputs/trajectory_plots/summary_grid.png"
+echo "    Club profile comparison: outputs/trajectory_plots/club_comparison_profile.png"
+echo "    Club overlay comparison: outputs/trajectory_plots/club_comparison_overlay.png"
