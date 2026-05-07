@@ -1,0 +1,26 @@
+[
+  {
+    "frame_index": 0,
+    "visible": 1,
+    "uv": [
+      293.0,
+      389.0
+    ]
+  },
+  {
+    "frame_index": 1,
+    "visible": 1,
+    "uv": [
+      312.0,
+      307.0
+    ]
+  },
+  {
+    "frame_index": 2,
+    "visible": 1,
+    "uv": [
+      326.0,
+      247.0
+    ]
+  }
+]
