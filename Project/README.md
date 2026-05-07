@@ -11,7 +11,7 @@ Single-camera golf ball tracking and 3D trajectory estimation from iPhone video 
 | Metric | Value |
 |---|---|
 | 2D center RMSE (real data) | **25.8 px** |
-| Visibility F1 (real data) | **0.92** |
+| Visibility F1 (real data) | **0.997** |
 | 3D trajectory RMSE | ~3.0 m *(limited by monocular depth ambiguity and data scarcity)* |
 | Real sequences evaluated | 13 (5 PW · 5 7-iron · 3 Driver) |
 
